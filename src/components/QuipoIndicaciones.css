@@ -1,0 +1,159 @@
+/* Quipo Indicaciones - estilos como los quipus de los retos */
+.quipo-indicaciones-container {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quipo-indicaciones-mensaje {
+  position: absolute;
+  bottom: 520px;
+  right: 0;
+  z-index: 1001;
+  max-width: 400px;
+}
+
+.quipo-indicaciones-personaje {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  animation: quipoFloat 2s ease-in-out infinite;
+}
+
+.quipo-indicaciones-personaje:hover { 
+  transform: scale(1.15); 
+}
+
+.quipo-indicaciones-img {
+  width: 500px;
+  height: 500px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.5));
+  transition: all 0.3s ease;
+}
+
+/* Estilos para el mensaje - como los otros quipus grandes */
+.mensaje-burbuja {
+  background: 
+    linear-gradient(135deg, rgba(245, 222, 179, 0.95) 0%, rgba(222, 184, 135, 0.95) 30%, rgba(210, 180, 140, 0.95) 70%, rgba(188, 154, 106, 0.95) 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(139, 69, 19, 0.1) 8px, rgba(139, 69, 19, 0.1) 16px);
+  border: 4px solid #8B4513;
+  border-radius: 25px;
+  padding: 25px 30px;
+  box-shadow: 
+    0 12px 35px rgba(139, 69, 19, 0.5),
+    0 6px 20px rgba(139, 69, 19, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(139, 69, 19, 0.2);
+  position: relative;
+  backdrop-filter: blur(10px);
+  animation: mensajeAparece 0.4s ease-out;
+}
+
+.mensaje-burbuja p {
+  color: #8B4513;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+  margin: 0;
+  line-height: 1.4;
+}
+
+.mensaje-burbuja::before {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-top: 15px solid #8B4513;
+}
+
+.mensaje-indicador {
+  color: #8B4513 !important;
+  font-size: 1rem !important;
+  font-style: italic !important;
+  opacity: 0.8;
+  animation: parpadeo 1.5s ease-in-out infinite;
+}
+
+/* Animaciones */
+@keyframes quipoFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes mensajeAparece {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes parpadeo {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .quipo-indicaciones-container {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .quipo-indicaciones-img {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .quipo-indicaciones-mensaje {
+    bottom: 320px;
+    max-width: 300px;
+  }
+  
+  .mensaje-burbuja {
+    padding: 20px 25px;
+  }
+  
+  .mensaje-burbuja p {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .quipo-indicaciones-img {
+    width: 250px;
+    height: 250px;
+  }
+  
+  .quipo-indicaciones-mensaje {
+    bottom: 270px;
+    max-width: 250px;
+  }
+  
+  .mensaje-burbuja {
+    padding: 18px 22px;
+  }
+  
+  .mensaje-burbuja p {
+    font-size: 1rem;
+  }
+}

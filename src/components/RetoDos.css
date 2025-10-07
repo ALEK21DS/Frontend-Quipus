@@ -1,0 +1,802 @@
+/* Página RetoDos - Estilos con fondo reto2.1.png */
+.reto-dos-page {
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  background-image: url('../assets/img/reto2.1.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Header para RetoDos */
+.reto-dos-page .reto-dos-header {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  border: 4px solid rgba(139, 69, 19, 0.6);
+  border-radius: 16px;
+  padding: 2rem 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  position: relative;
+  z-index: 10;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.main-title {
+  color: #FFFFFF;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    0 0 10px rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.5px;
+  line-height: 1.3;
+}
+
+.subtitle {
+  color: #FFFFFF;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 400;
+  text-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.7),
+    0 0 8px rgba(255, 255, 255, 0.2);
+  position: relative;
+  z-index: 1;
+  line-height: 1.4;
+}
+
+.info-usuario {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-name {
+  color: #FFD700;
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.user-details {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.detail-item {
+  color: #F5F5DC;
+  font-size: 0.9rem;
+  background: rgba(139, 69, 19, 0.3);
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+/* Contenedor principal */
+.reto-dos-container {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(5px);
+  border: 4px solid rgba(139, 69, 19, 0.6);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 20px auto;
+  position: relative;
+  z-index: 10;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  min-height: 400px;
+  box-sizing: border-box;
+}
+
+/* Contenido del contenedor */
+.reto-dos-contenido-principal {
+  text-align: center;
+  padding: 0.5rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.titulo-contenido {
+  color: #FFFFFF;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 2rem 0;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.7),
+    0 0 10px rgba(255, 255, 255, 0.3);
+  line-height: 1.4;
+}
+
+.descripcion-contenido {
+  color: #FFFFFF;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  margin: 0 0 2rem 0;
+  text-shadow: 
+    1px 1px 2px rgba(0, 0, 0, 0.7),
+    0 0 8px rgba(255, 255, 255, 0.2);
+  line-height: 1.6;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Botones */
+.botones-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.btn-volver {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
+  color: #FFFFFF;
+  border: 2px solid rgba(139, 69, 19, 0.8);
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.btn-volver:hover {
+  background: linear-gradient(135deg, #A0522D 0%, #CD853F 50%, #DEB887 100%);
+  border-color: rgba(139, 69, 19, 1);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn-volver:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .reto-dos-page .reto-dos-header,
+  .reto-dos-container {
+    padding: 1.5rem 1.5rem;
+    margin: 15px auto;
+  }
+  
+  .main-title {
+    font-size: 1.5rem;
+  }
+  
+  .titulo-contenido {
+    font-size: 1.3rem;
+  }
+  
+  .descripcion-contenido {
+    font-size: 1rem;
+  }
+  
+  .btn-volver {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reto-dos-page .reto-dos-header,
+  .reto-dos-container {
+    padding: 1rem 1rem;
+    margin: 10px auto;
+  }
+  
+  .main-title {
+    font-size: 1.3rem;
+  }
+  
+  .titulo-contenido {
+    font-size: 1.2rem;
+  }
+  
+  .descripcion-contenido {
+    font-size: 0.9rem;
+  }
+  
+  .user-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-volver {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Estilos para el ejercicio de drag and drop */
+.reto-dos-ejercicio-drag-drop {
+  margin: 1rem 0;
+  text-align: left;
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+}
+
+.reto-dos-texto-ejercicio {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  color: #F5F5DC;
+  line-height: 1.8;
+  margin: 0 0 2rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  width: 100%;
+  max-width: 100%;
+  padding: 0;
+  text-align: justify;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+/* Estilos para los espacios en blanco (blanks) */
+.reto-dos-drag-blank {
+  display: inline-block;
+  min-width: 120px;
+  height: 35px;
+  margin: 0 8px;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 35px;
+  color: #FFD700;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 4px;
+  padding: 0 10px;
+}
+
+/* Estilos cuando la página está desactivada */
+.reto-dos-page.desactivada .reto-dos-drag-blank {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.reto-dos-page.desactivada .reto-dos-drag-option {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.reto-dos-page.desactivada .reto-dos-btn-enviar {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.reto-dos-drag-blank:hover {
+  background-color: rgba(255, 215, 0, 0.2);
+  transform: scale(1.05);
+}
+
+/* Contenedor de las opciones arrastrables */
+.reto-dos-opciones-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 2rem;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(139, 69, 19, 0.2);
+  border-radius: 12px;
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Estilos para cada opción arrastrable */
+.reto-dos-drag-option {
+  background: linear-gradient(135deg, #CD853F 0%, #A0522D 100%);
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: grab;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+  user-select: none;
+}
+
+.reto-dos-drag-option:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, #DEB887 0%, #CD853F 100%);
+}
+
+.reto-dos-drag-option:active {
+  cursor: grabbing;
+  transform: scale(0.95);
+}
+
+/* Estilos para el botón de enviar */
+.reto-dos-boton-enviar-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 100%;
+}
+
+.reto-dos-btn-enviar {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
+  color: #FFFFFF;
+  border: 2px solid rgba(139, 69, 19, 0.8);
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.reto-dos-btn-enviar:hover {
+  background: linear-gradient(135deg, #A0522D 0%, #CD853F 50%, #DEB887 100%);
+  border-color: rgba(139, 69, 19, 1);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.reto-dos-btn-enviar:active {
+  transform: translateY(0);
+  box-shadow: 
+    0 2px 10px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Responsive para el ejercicio */
+@media (max-width: 768px) {
+  .reto-dos-texto-ejercicio {
+    font-size: 1.1rem;
+  }
+
+  .reto-dos-drag-blank {
+    min-width: 100px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 0.9rem;
+  }
+
+  .reto-dos-drag-option {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+
+  .reto-dos-opciones-container {
+    padding: 15px;
+    gap: 10px;
+  }
+
+  .reto-dos-btn-enviar {
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .reto-dos-texto-ejercicio {
+    font-size: 1rem;
+  }
+
+  .reto-dos-drag-blank {
+    min-width: 80px;
+    height: 25px;
+    line-height: 25px;
+    font-size: 0.8rem;
+    margin: 0 4px;
+  }
+
+  .reto-dos-drag-option {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .reto-dos-opciones-container {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .reto-dos-btn-enviar {
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Estilos para Quipu RetoDos */
+.quipuretodos-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quipuretodos-mensaje {
+  position: absolute;
+  bottom: 220px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+}
+
+.quipuretodos-personaje {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  animation: quipuFloat 2s ease-in-out infinite;
+}
+
+.quipuretodos-personaje:hover {
+  transform: scale(1.1);
+}
+
+.quipuretodos-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
+}
+
+.quipuretodos-texto {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-top: 12px;
+  text-align: center;
+  animation: textPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes quipuFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Estilos específicos solo para el mensaje PA */
+.mensaje-bubble .mensaje-pa {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #8B4513;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  margin-top: 0.5rem;
+}
+
+/* Responsive para Quipu RetoDos */
+@media (max-width: 768px) {
+  .quipuretodos-container {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .quipuretodos-mensaje {
+    bottom: 200px;
+  }
+  
+  .quipuretodos-img {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .quipuretodos-texto {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .quipuretodos-container {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .quipuretodos-mensaje {
+    bottom: 180px;
+  }
+  
+  .quipuretodos-img {
+    width: 130px;
+    height: 130px;
+  }
+  
+  .quipuretodos-texto {
+    font-size: 1.2rem;
+  }
+}
+
+/* Estilos para la corona y pergamino del Reto 2 - Copiados exactamente del Reto 1 */
+.corona-container-reto2 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 2000;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.corona-container-reto2 .corona-img-reto2.clickeable-reto2 {
+  pointer-events: auto;
+}
+
+/* Texto de instrucción para presionar la corona del Reto 2 */
+.instruccion-corona-reto2 {
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2001;
+  pointer-events: none;
+}
+
+.instruccion-corona-reto2 p {
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.9) 0%, rgba(160, 82, 45, 0.9) 100%);
+  color: #FFD700;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  padding: 15px 25px;
+  border-radius: 25px;
+  border: none;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  animation: instruccionPulseReto2 2s ease-in-out infinite alternate;
+}
+
+@keyframes instruccionPulseReto2 {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  }
+  100% {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  }
+}
+
+/* Efecto borroso del fondo cuando aparece la corona del Reto 2 */
+.reto-dos-page.blur-background .reto-dos-header,
+.reto-dos-page.blur-background .reto-dos-container,
+.reto-dos-page.blur-background .quipuretodos-container {
+  filter: blur(5px);
+  transition: filter 0.3s ease;
+}
+
+.pergamino-img-reto2 {
+  width: 250px;
+  height: 350px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(139, 69, 19, 0.6));
+  animation: pergaminoAppearReto2 1.5s ease-out;
+}
+
+.corona-img-reto2 {
+  width: 350px;
+  height: 350px;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(255, 215, 0, 0.6));
+  animation: coronaAppearReto2 1.5s ease-out;
+}
+
+.corona-img-reto2.clickeable-reto2 {
+  cursor: pointer;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.corona-img-reto2.clickeable-reto2:hover {
+  transform: scale(1.1);
+  filter: drop-shadow(0 12px 24px rgba(255, 215, 0, 0.8));
+}
+
+@keyframes pergaminoAppearReto2 {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-10px) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes coronaAppearReto2 {
+  0% {
+    opacity: 0;
+    transform: scale(0) rotate(0deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(360deg);
+  }
+}
+
+/* Responsive para corona y pergamino del Reto 2 */
+@media (max-width: 768px) {
+  .quipuretodos-container {
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .quipuretodos-mensaje {
+    bottom: 260px;
+    right: 10px;
+  }
+  
+  .mensaje-bubble {
+    width: 250px;
+    padding: 15px 20px;
+  }
+  
+  .mensaje-bubble p {
+    font-size: 1.1rem;
+  }
+  
+  .mensaje-bubble .mensaje-as {
+    font-size: 2rem !important;
+    letter-spacing: 2px;
+  }
+  
+  .mensaje-bubble .mensaje-pa {
+    font-size: 2rem !important;
+    letter-spacing: 2px;
+  }
+  
+  .instruccion-corona-reto2 p {
+    font-size: 1.2rem;
+    padding: 12px 20px;
+  }
+  
+  .quipuretodos-img {
+    width: 180px;
+    height: 180px;
+  }
+  
+  .quipuretodos-texto {
+    font-size: 1.4rem;
+  }
+  
+  .pergamino-img-reto2 {
+    width: 200px;
+    height: 280px;
+  }
+  
+  .corona-img-reto2 {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 480px) {
+  .quipuretodos-container {
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .quipuretodos-mensaje {
+    bottom: 240px;
+    right: 5px;
+  }
+  
+  .mensaje-bubble {
+    width: 200px;
+    padding: 12px 15px;
+  }
+  
+  .mensaje-bubble p {
+    font-size: 1rem;
+  }
+  
+  .mensaje-bubble .mensaje-as {
+    font-size: 1.8rem !important;
+    letter-spacing: 1px;
+  }
+  
+  .mensaje-bubble .mensaje-pa {
+    font-size: 1.8rem !important;
+    letter-spacing: 1px;
+  }
+  
+  .instruccion-corona-reto2 p {
+    font-size: 1.1rem;
+    padding: 10px 18px;
+  }
+  
+  .quipuretodos-img {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .quipuretodos-texto {
+    font-size: 1.2rem;
+  }
+  
+  .pergamino-img-reto2 {
+    width: 160px;
+    height: 220px;
+  }
+  
+  .corona-img-reto2 {
+    width: 220px;
+    height: 220px;
+  }
+  
+  .corona-container-reto2 {
+    gap: 10px;
+  }
+}

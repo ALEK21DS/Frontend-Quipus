@@ -1,0 +1,618 @@
+/* Página RetoTres - Estilos con fondo reto3.png */
+.reto-tres-page {
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/img/reto3.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+}
+
+.reto-tres-page::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  z-index: 1;
+}
+
+.contenido-reto-tres {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+  max-width: 50%;
+  width: 50%;
+  padding: 40px 40px 40px 20px;
+  margin-left: 0;
+}
+
+.titulo-principal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  z-index: 3;
+}
+
+.titulo-principal h1 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #FFD700;
+  margin: 0 0 1rem 0;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(255, 215, 0, 0.5);
+  line-height: 1.2;
+}
+
+.descripcion {
+  margin-top: 120px;
+  margin-bottom: 3rem;
+}
+
+.descripcion p {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  color: #F5F5DC;
+  line-height: 1.5;
+  margin: 0 0 1.2rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.campo-clave {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.etiqueta-clave {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.input-clave {
+  background: 
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(245, 222, 179, 0.98) 30%, rgba(222, 184, 135, 0.98) 70%, rgba(210, 180, 140, 0.98) 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(40, 25, 15, 0.1) 8px, rgba(40, 25, 15, 0.1) 16px);
+  border: 3px solid #8B4513;
+  border-radius: 15px;
+  padding: 12px 18px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  color: #1A1A1A;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 6px 20px rgba(40, 25, 15, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(40, 25, 15, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  max-width: 300px;
+}
+
+.input-clave:focus {
+  outline: none;
+  border-color: #FFD700;
+  box-shadow: 
+    0 8px 25px rgba(255, 215, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(139, 69, 19, 0.2);
+  transform: translateY(-2px);
+}
+
+.input-clave::placeholder {
+  color: #8B4513;
+  opacity: 0.7;
+  font-weight: 500;
+}
+
+.input-clave.input-error {
+  border-color: #DC143C !important;
+  box-shadow: 
+    0 6px 20px rgba(220, 20, 60, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3),
+    inset 0 -2px 4px rgba(220, 20, 60, 0.1) !important;
+}
+
+.mensaje-error {
+  color: #DC143C;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  text-shadow: 2px 2px 4px rgba(220, 20, 60, 0.3);
+  margin-top: 5px;
+}
+
+.reto-tres-btn-enviar {
+  background: 
+    linear-gradient(135deg, #8B4513 0%, #A0522D 30%, #CD853F 70%, #DEB887 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(101, 67, 33, 0.2) 8px, rgba(101, 67, 33, 0.2) 16px);
+  color: #D4AF37;
+  border: 3px solid #8B4513;
+  border-radius: 25px;
+  padding: 12px 20px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 20px rgba(101, 67, 33, 0.6),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(101, 67, 33, 0.3);
+  text-shadow: 
+    2px 2px 4px rgba(101, 67, 33, 0.8),
+    0 0 8px rgba(212, 175, 55, 0.5);
+  position: relative;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 15px;
+  max-width: 300px;
+  align-self: flex-start;
+}
+
+.reto-tres-btn-enviar::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  background: linear-gradient(45deg, #8B4513, #A0522D, #8B4513);
+  border-radius: 23px;
+  z-index: -1;
+}
+
+.reto-tres-btn-enviar:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 
+    0 12px 25px rgba(139, 69, 19, 0.5),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4),
+    inset 0 -2px 4px rgba(139, 69, 19, 0.3);
+  background: 
+    linear-gradient(135deg, #A0522D 0%, #CD853F 30%, #DEB887 70%, #F4E4BC 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(139, 69, 19, 0.3) 8px, rgba(139, 69, 19, 0.3) 16px);
+}
+
+.reto-tres-btn-enviar:active:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 
+    0 6px 15px rgba(139, 69, 19, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(139, 69, 19, 0.3);
+}
+
+.reto-tres-btn-enviar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  background: 
+    linear-gradient(135deg, #6c757d 0%, #5a6268 100%),
+    repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(108, 117, 125, 0.2) 8px, rgba(108, 117, 125, 0.2) 16px);
+  border-color: #6c757d;
+}
+
+.reto-tres-btn-enviar:disabled:hover {
+  transform: none;
+  box-shadow: 
+    0 8px 20px rgba(108, 117, 125, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    inset 0 -2px 4px rgba(108, 117, 125, 0.2);
+}
+
+.reto-tres-btn-enviar .btn-texto {
+  position: relative;
+  z-index: 1;
+}
+
+.reto-tres-btn-enviar .btn-icono {
+  position: relative;
+  z-index: 1;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease;
+}
+
+.reto-tres-btn-enviar:hover:not(:disabled) .btn-icono {
+  transform: scale(1.2);
+}
+
+.btn-continuar {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border: 3px solid #28a745;
+  border-radius: 50px;
+  padding: 20px 30px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 24px rgba(40, 167, 69, 0.4),
+    0 4px 8px rgba(40, 167, 69, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.btn-continuar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-continuar:hover::before {
+  left: 100%;
+}
+
+.btn-continuar:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 
+    0 15px 35px rgba(40, 167, 69, 0.6),
+    0 8px 15px rgba(40, 167, 69, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.btn-continuar:active {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 20px rgba(40, 167, 69, 0.5),
+    0 4px 8px rgba(40, 167, 69, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.btn-texto {
+  position: relative;
+  z-index: 1;
+}
+
+.btn-icono {
+  position: relative;
+  z-index: 1;
+  font-size: 1.6rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-continuar:hover .btn-icono {
+  transform: translateX(8px) scale(1.1);
+}
+
+.btn-continuar.deshabilitado {
+  background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+  border: 3px solid #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-continuar.deshabilitado:hover {
+  transform: none;
+  box-shadow: 
+    0 8px 24px rgba(108, 117, 125, 0.3),
+    0 4px 8px rgba(108, 117, 125, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.btn-continuar.deshabilitado:hover .btn-icono {
+  transform: none;
+}
+
+/* Botón Volver flotante */
+.btn-volver-flotante {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  border: 3px solid #dc3545;
+  border-radius: 50px;
+  padding: 20px 30px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 8px 24px rgba(220, 53, 69, 0.4),
+    0 4px 8px rgba(220, 53, 69, 0.2),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.btn-volver-flotante::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-volver-flotante:hover::before {
+  left: 100%;
+}
+
+.btn-volver-flotante:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 
+    0 15px 35px rgba(220, 53, 69, 0.6),
+    0 8px 15px rgba(220, 53, 69, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.btn-volver-flotante:active {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 
+    0 8px 20px rgba(220, 53, 69, 0.5),
+    0 4px 8px rgba(220, 53, 69, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+}
+
+.btn-volver-flotante:hover .btn-icono {
+  transform: translateX(-8px) scale(1.1);
+}
+
+.btn-continuar:disabled {
+  cursor: not-allowed;
+}
+
+/* Estilos para el quipu Reto 3 - Copiados exactamente de quipuaspamagica */
+.quipureto3-container {
+  position: fixed;
+  bottom: 120px;
+  right: 30px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.quipureto3-mensaje {
+  position: absolute;
+  bottom: 240px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+}
+
+.quipureto3-personaje {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.3s ease;
+  animation: quipuFloat 2s ease-in-out infinite;
+}
+
+.quipureto3-personaje:hover {
+  transform: scale(1.1);
+}
+
+.quipureto3-img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transition: all 0.3s ease;
+}
+
+.quipureto3-texto {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #FFD700;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  margin-top: 12px;
+  text-align: center;
+  animation: textPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes quipuFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+/* Estilos para página desactivada */
+.reto-tres-page.pagina-desactivada .contenido-reto-tres,
+.reto-tres-page.pagina-desactivada .btn-continuar,
+.reto-tres-page.pagina-desactivada .campo-clave {
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenido-reto-tres {
+    max-width: 90vw;
+    padding: 30px 20px;
+  }
+  
+  .titulo-principal {
+    top: 30px;
+    left: 30px;
+  }
+  
+  .titulo-principal h1 {
+    font-size: 2.2rem;
+  }
+  
+  .descripcion {
+    margin-top: 100px;
+  }
+  
+  .etiqueta-clave {
+    font-size: 1.1rem;
+  }
+  
+  .input-clave {
+    font-size: 1rem;
+    padding: 10px 15px;
+    max-width: 280px;
+  }
+  
+  .reto-tres-btn-enviar {
+    font-size: 0.9rem;
+    padding: 10px 16px;
+    min-width: 130px;
+    max-width: 280px;
+  }
+  
+  .descripcion p {
+    font-size: 1rem;
+  }
+  
+  .quipureto3-container {
+    bottom: 100px;
+    right: 20px;
+  }
+  
+  .quipureto3-mensaje {
+    bottom: 220px;
+  }
+  
+  .quipureto3-img {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .quipureto3-texto {
+    font-size: 1.4rem;
+  }
+  
+  .btn-continuar {
+    font-size: 1.1rem;
+    padding: 16px 24px;
+    bottom: 20px;
+    right: 20px;
+  }
+  
+  .btn-volver-flotante {
+    font-size: 1.1rem;
+    padding: 16px 24px;
+    bottom: 20px;
+    left: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .titulo-principal {
+    top: 20px;
+    left: 20px;
+  }
+  
+  .titulo-principal h1 {
+    font-size: 1.8rem;
+  }
+  
+  .descripcion {
+    margin-top: 80px;
+  }
+  
+  .etiqueta-clave {
+    font-size: 1rem;
+  }
+  
+  .input-clave {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    max-width: 250px;
+  }
+  
+  .reto-tres-btn-enviar {
+    font-size: 0.8rem;
+    padding: 8px 14px;
+    min-width: 120px;
+    max-width: 250px;
+  }
+  
+  .mensaje-error {
+    font-size: 0.9rem;
+  }
+  
+  .descripcion p {
+    font-size: 0.9rem;
+  }
+  
+  .quipureto3-container {
+    bottom: 80px;
+    right: 15px;
+  }
+  
+  .quipureto3-mensaje {
+    bottom: 200px;
+  }
+  
+  .quipureto3-img {
+    width: 140px;
+    height: 140px;
+  }
+  
+  .quipureto3-texto {
+    font-size: 1.3rem;
+  }
+  
+  .btn-continuar {
+    font-size: 1rem;
+    padding: 14px 20px;
+    bottom: 15px;
+    right: 15px;
+  }
+  
+  .btn-volver-flotante {
+    font-size: 1rem;
+    padding: 14px 20px;
+    bottom: 15px;
+    left: 15px;
+  }
+}

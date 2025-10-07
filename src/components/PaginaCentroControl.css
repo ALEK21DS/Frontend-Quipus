@@ -1,0 +1,836 @@
+/* Página Centro de Control - Estilos específicos para evitar interferencia */
+
+/* Eliminar cualquier blur que pueda venir de otros archivos */
+.pagina-centro-control * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+.pagina-centro-control .reto-card,
+.pagina-centro-control .reto-card *,
+.pagina-centro-control .reto-boton,
+.pagina-centro-control .reto-boton * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  filter: none !important;
+}
+
+/* Reset específico para las tarjetas */
+.pagina-centro-control .reto-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  width: 100% !important;
+  max-width: 180px !important;
+  padding: 15px !important;
+  min-height: 280px !important;
+}
+
+/* Estilos especiales para retos completados */
+.pagina-centro-control .reto-card.completado {
+  background: rgba(255, 215, 0, 0.15) !important;
+  border: 2px solid #FFD700 !important;
+  box-shadow: 
+    0 6px 20px rgba(255, 215, 0, 0.3),
+    0 2px 8px rgba(255, 215, 0, 0.2),
+    inset 0 1px 0 rgba(255, 215, 0, 0.3) !important;
+  animation: retoCompletadoGlow 3s ease-in-out infinite alternate;
+}
+
+/* Estilos para retos bloqueados */
+.pagina-centro-control .reto-card.bloqueado {
+  opacity: 0.6 !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+  background: rgba(128, 128, 128, 0.1) !important;
+  border: 2px solid rgba(128, 128, 128, 0.3) !important;
+  box-shadow: 
+    0 4px 15px rgba(128, 128, 128, 0.2),
+    inset 0 1px 0 rgba(128, 128, 128, 0.1) !important;
+}
+
+.pagina-centro-control .reto-card.completado:hover {
+  background: rgba(255, 215, 0, 0.25) !important;
+  border: 2px solid #FFD700 !important;
+  box-shadow: 
+    0 8px 25px rgba(255, 215, 0, 0.4),
+    0 4px 12px rgba(255, 215, 0, 0.3),
+    inset 0 1px 0 rgba(255, 215, 0, 0.4) !important;
+}
+
+@keyframes retoCompletadoGlow {
+  0% {
+    box-shadow: 
+      0 6px 20px rgba(255, 215, 0, 0.3),
+      0 2px 8px rgba(255, 215, 0, 0.2),
+      inset 0 1px 0 rgba(255, 215, 0, 0.3);
+  }
+  100% {
+    box-shadow: 
+      0 6px 20px rgba(255, 215, 0, 0.5),
+      0 2px 8px rgba(255, 215, 0, 0.4),
+      inset 0 1px 0 rgba(255, 215, 0, 0.5);
+  }
+}
+
+@keyframes circuloDoradoGlow {
+  0% {
+    box-shadow: 
+      0 4px 12px rgba(255, 215, 0, 0.4),
+      0 0 20px rgba(255, 215, 0, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3);
+  }
+  100% {
+    box-shadow: 
+      0 6px 16px rgba(255, 215, 0, 0.6),
+      0 0 30px rgba(255, 215, 0, 0.5),
+      inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* Indicador de reto completado */
+.reto-completado-indicador {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.completado-texto {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  color: #8B4513;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 12px;
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 2px 6px rgba(255, 215, 0, 0.3);
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Quitar el fondo circular del botón cuando está completado */
+.pagina-centro-control .reto-boton.completado-boton {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  min-width: auto !important;
+  min-height: auto !important;
+}
+
+.pagina-centro-control .reto-card:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 4px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.pagina-centro-control .reto-boton {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
+  width: 40px !important;
+  height: 40px !important;
+  box-shadow: 
+    0 3px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+.pagina-centro-control .reto-card:hover .reto-boton:not(.completado-boton) {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 
+    0 4px 15px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Colores específicos para títulos y descripciones */
+.pagina-centro-control .reto-titulo {
+  color: #FFD700 !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+.pagina-centro-control .reto-descripcion {
+  color: #F5F5DC !important;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Colores de dificultad específicos */
+.pagina-centro-control .dificultad-fácil {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4) !important;
+  border: 1px solid rgba(40, 167, 69, 0.3) !important;
+}
+
+.pagina-centro-control .dificultad-medio {
+  background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4) !important;
+  border: 1px solid rgba(255, 193, 7, 0.3) !important;
+}
+
+.pagina-centro-control .dificultad-difícil {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4) !important;
+  border: 1px solid rgba(220, 53, 69, 0.3) !important;
+}
+
+/* Página Centro de Control */
+.pagina-centro-control {
+  width: 100vw;
+  min-height: 100vh;
+  background-image: url('../assets/img/retos.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  position: relative;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px 0;
+}
+
+.pagina-centro-control::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.contenido-centro-control {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 1200px;
+  padding: 40px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-centro-control h1 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0 0 1rem 0;
+  text-shadow: 
+    2px 2px 4px rgba(0, 0, 0, 0.8),
+    0 0 10px rgba(255, 255, 255, 0.3);
+  line-height: 1.2;
+}
+
+.subtitulo-centro {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.4rem;
+  font-weight: 400;
+  color: #FFFFFF;
+  margin: 0 0 3rem 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.retos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 120px;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.reto-card {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 2px solid rgba(255, 255, 255, 0.6) !important;
+  border-radius: 15px;
+  padding: 18px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 180px;
+  margin: 0 auto;
+  height: auto;
+  min-height: 280px;
+}
+
+.reto-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.3s ease;
+}
+
+.reto-card:hover::before {
+  left: 100%;
+}
+
+.reto-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 2px solid rgba(255, 255, 255, 0.8) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 6px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.reto-card:active {
+  transform: translateY(-1px);
+}
+
+.reto-imagen {
+  width: 70px;
+  height: 70px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.reto-card:hover .reto-imagen {
+  transform: scale(1.05);
+}
+
+/* Estilos para el círculo de la imagen cuando el reto está completado */
+.pagina-centro-control .reto-card.completado .reto-imagen {
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%) !important;
+  border: 2px solid #FFD700 !important;
+  box-shadow: 
+    0 4px 12px rgba(255, 215, 0, 0.4),
+    0 0 20px rgba(255, 215, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3) !important;
+  animation: circuloDoradoGlow 2s ease-in-out infinite alternate;
+}
+
+.pagina-centro-control .reto-card.completado:hover .reto-imagen {
+  background: linear-gradient(135deg, #FFA500 0%, #FFD700 50%, #FFFF00 100%) !important;
+  box-shadow: 
+    0 6px 16px rgba(255, 215, 0, 0.5),
+    0 0 25px rgba(255, 215, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.4) !important;
+}
+
+.reto-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Badge de clave (AS / PA) sobre la imagen cuando está completado */
+.reto-card { position: relative; }
+
+.reto-clave-badge {
+  position: absolute;
+  top: 0px;
+  right: 6px;
+  transform: translateY(-40%);
+  background: #1a1a1a;
+  color: #fff;
+  border: 2px solid #FFD700;
+  border-radius: 10px;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  z-index: 5;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 0 10px rgba(255,215,0,0.35);
+}
+
+.clave-as {
+  background: linear-gradient(135deg, #5e4b8b 0%, #2d1b4e 100%);
+}
+
+.clave-pa {
+  background: linear-gradient(135deg, #0f5132 0%, #052920 100%);
+}
+
+.reto-contenido {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.reto-titulo {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FFD700;
+  margin: 0 0 6px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.reto-descripcion {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.85rem;
+  color: #F5F5DC;
+  margin: 0 0 10px 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  opacity: 0.9;
+}
+
+.reto-dificultad {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 6px;
+  border-radius: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+}
+
+.dificultad-fácil {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+  border: 1px solid rgba(40, 167, 69, 0.3);
+}
+
+.dificultad-medio {
+  background: linear-gradient(135deg, #ffc107 0%, #ff8c00 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.4);
+  border: 1px solid rgba(255, 193, 7, 0.3);
+}
+
+.dificultad-difícil {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+  border: 1px solid rgba(220, 53, 69, 0.3);
+}
+
+.reto-boton {
+  margin-top: auto;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(255, 255, 255, 0.7) !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 
+    0 3px 12px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.reto-card:hover .reto-boton:not(.completado-boton) {
+  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 2px solid rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 
+    0 6px 20px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.reto-icono {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: transform 0.3s ease;
+}
+
+.reto-card:hover .reto-icono {
+  transform: translateX(1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenido-centro-control {
+    padding: 30px 20px;
+  }
+  
+  .header-centro-control h1 {
+    font-size: 2.2rem;
+  }
+  
+  .subtitulo-centro {
+    font-size: 1.1rem;
+  }
+  
+  .retos-grid {
+    grid-template-columns: 1fr;
+    gap: 25px;
+    max-width: 300px;
+  }
+  
+  .reto-card {
+    padding: 20px;
+  }
+  
+  .reto-imagen {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .reto-titulo {
+    font-size: 1.2rem;
+  }
+  
+  .reto-descripcion {
+    font-size: 0.8rem;
+  }
+}
+
+/* Botón flotante para salir de las ruinas */
+.boton-salir-flotante {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  animation: botonSalirPulse 2s ease-in-out infinite;
+}
+
+.btn-salir-ruinas {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 30%, #CD853F 70%, #DEB887 100%);
+  color: #FFD700;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-salir-ruinas:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.5), 0 0 30px rgba(255, 215, 0, 0.5);
+  background: linear-gradient(135deg, #A0522D 0%, #CD853F 30%, #DEB887 70%, #F4A460 100%);
+}
+
+.btn-salir-ruinas:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+@keyframes botonSalirPulse {
+  0% {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 30px rgba(255, 215, 0, 0.6);
+  }
+  100% {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 215, 0, 0.3);
+  }
+}
+
+/* Modal para ingresar código */
+.modal-overlay-codigo {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+.modal-codigo {
+  background: 
+    linear-gradient(135deg, #F5DEB3 0%, #DEB887 30%, #D2B48C 70%, #BC9A6A 100%),
+    repeating-linear-gradient(90deg, transparent, transparent 8px, rgba(139, 69, 19, 0.1) 8px, rgba(139, 69, 19, 0.1) 16px);
+  border: 4px solid #8B4513;
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  animation: modalSlideIn 0.4s ease-out;
+  position: relative;
+}
+
+.modal-codigo-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.modal-codigo-header h2 {
+  color: #8B4513;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.3);
+  margin: 0;
+}
+
+.btn-cerrar-modal {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: linear-gradient(135deg, #8B4513, #A0522D);
+  border: 2px solid #8B4513;
+  color: #F5DEB3;
+  font-size: 1.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.btn-cerrar-modal:hover {
+  background: linear-gradient(135deg, #A0522D, #CD853F);
+  transform: scale(1.1);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+.input-codigo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.input-codigo {
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1.4rem;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 2px;
+  border: 3px solid #8B4513;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #8B4513;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.input-codigo:focus {
+  outline: none;
+  border-color: #8B4513;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1), 0 0 20px rgba(139, 69, 19, 0.3);
+  transform: scale(1.02);
+}
+
+.mensaje-error {
+  color: #8B4513;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 15px;
+  text-shadow: 1px 1px 2px rgba(139, 69, 19, 0.3);
+}
+
+.modal-codigo-footer {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.btn-enviar-codigo {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 50%, #CD853F 100%);
+  color: #F5DEB3;
+  border: 2px solid #8B4513;
+  border-radius: 15px;
+  padding: 12px 30px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+.btn-enviar-codigo:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #A0522D 0%, #CD853F 50%, #DEB887 100%);
+  border-color: #8B4513;
+}
+
+.btn-enviar-codigo:active {
+  transform: translateY(-1px) scale(1.02);
+}
+
+.btn-enviar-codigo:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  background: linear-gradient(135deg, #666 0%, #888 50%, #999 100%);
+  border-color: #666;
+}
+
+.btn-enviar-codigo:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-enviar-codigo .spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 3px solid rgba(245, 222, 179, 0.3);
+  border-top-color: #F5DEB3;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 480px) {
+  .header-centro-control h1 {
+    font-size: 1.8rem;
+  }
+  
+  .subtitulo-centro {
+    font-size: 1rem;
+  }
+  
+  .reto-card {
+    padding: 15px;
+  }
+  
+  .reto-imagen {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .pagina-centro-control .reto-card.completado .reto-imagen {
+    box-shadow: 
+      0 3px 10px rgba(255, 215, 0, 0.3),
+      0 0 15px rgba(255, 215, 0, 0.2),
+      inset 0 1px 3px rgba(255, 255, 255, 0.3) !important;
+  }
+  
+  .reto-titulo {
+    font-size: 1.1rem;
+  }
+  
+  .reto-descripcion {
+    font-size: 0.75rem;
+  }
+}
+
+/* Media query para móviles pequeños */
+@media (max-width: 480px) {
+  .reto-imagen {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .pagina-centro-control .reto-card.completado .reto-imagen {
+    box-shadow: 
+      0 2px 8px rgba(255, 215, 0, 0.3),
+      0 0 12px rgba(255, 215, 0, 0.2),
+      inset 0 1px 2px rgba(255, 255, 255, 0.3) !important;
+  }
+}
+
+/* Estilos personalizados para el scroll del Centro de Control */
+.pagina-centro-control::-webkit-scrollbar {
+  width: 12px;
+}
+
+.pagina-centro-control::-webkit-scrollbar-track {
+  background: rgba(139, 69, 19, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(139, 69, 19, 0.2);
+}
+
+.pagina-centro-control::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.pagina-centro-control::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.pagina-centro-control::-webkit-scrollbar-corner {
+  background: rgba(139, 69, 19, 0.1);
+}
+
+/* Estilos de scroll para Firefox */
+.pagina-centro-control {
+  scrollbar-width: thin;
+  scrollbar-color: #8B4513 rgba(139, 69, 19, 0.1);
+}
