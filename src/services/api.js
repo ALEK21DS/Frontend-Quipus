@@ -1,9 +1,11 @@
 // Servicio API para comunicarse con el backend del Proyecto Quipus
-const API_BASE_URL = 'http://localhost:3001/api';
+// Usa la variable de entorno o localhost como fallback para desarrollo
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
+    console.log('🌐 API conectada a:', this.baseURL);
   }
 
   // Método genérico para hacer peticiones HTTP
