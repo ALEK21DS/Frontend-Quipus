@@ -1285,9 +1285,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
     const valorAbsoluto = Math.abs(coeficiente);
     const esNegativo = coeficiente < 0;
     
-    // Agregar signo si es negativo
+    // Agregar signo (siempre: positivo o negativo)
     if (esNegativo) {
       nudos.push('minus');
+    } else {
+      nudos.push('plus');
     }
     
     // Agregar nudos para el coeficiente numérico
