@@ -755,18 +755,11 @@
     order: 1;
   }
   
-  .contenedor-principal {
+  .contenido-principal {
     grid-template-columns: 1fr;
     gap: 15px;
     max-width: 600px;
     order: 2;
-    bottom: 15px;
-  }
-  
-  .columna-izquierda,
-  .columna-derecha {
-    height: 220px;
-    max-height: 220px;
   }
   
   .titulo-principal h1 {
@@ -780,9 +773,6 @@
     margin-bottom: 15px;
   }
   
-  .columna-izquierda, .columna-derecha {
-    min-height: auto;
-  }
   
   .formulario-contenedor {
     padding: 20px;
@@ -846,21 +836,9 @@
     margin-bottom: 12px;
   }
   
-  .contenedor-principal {
+  .contenido-principal {
     gap: 12px;
     max-width: 500px;
-    bottom: 10px;
-  }
-  
-  .columna-izquierda,
-  .columna-derecha {
-    height: 200px;
-    max-height: 200px;
-  }
-  
-  .columna-izquierda, .columna-derecha {
-    border-radius: 15px;
-    padding: 20px 15px;
   }
   
   .formulario-contenedor {
@@ -925,13 +903,8 @@
     margin-bottom: 10px;
   }
   
-  .contenedor-principal {
+  .contenido-principal {
     gap: 12px;
-  }
-  
-  .columna-izquierda, .columna-derecha {
-    border-radius: 12px;
-    padding: 15px 10px;
   }
   
   .formulario-contenedor {
@@ -975,180 +948,20 @@
   }
 }
 
-/* Forzar tamaño fijo en pantallas grandes */
-@media (min-height: 800px) {
-  .pagina-inicio {
-    justify-content: center;
-    max-height: 100vh;
-    overflow: hidden;
-  }
-  
-  .contenedor-principal {
-    margin-top: auto;
-    margin-bottom: auto;
-    max-height: 600px !important;
-    height: 600px !important;
-    width: 1000px !important;
-    max-width: 1000px !important;
-  }
-  
-  .columna-izquierda, .columna-derecha {
-    max-height: 580px !important;
-    height: 580px !important;
-    padding: 15px !important;
-    overflow: hidden;
-  }
-  
-  .formulario-contenedor {
-    padding: 8px !important;
-    height: 100%;
-    overflow: hidden;
-  }
-  
-  .formulario-datos {
-    gap: 10px !important;
-    height: 100%;
-    overflow: hidden;
-  }
-  
-  .campo-grupo {
-    gap: 6px !important;
-  }
-  
-  .input-campo {
-    padding: 8px 12px !important;
-    font-size: 1rem !important;
-  }
-  
-  .btn-iniciar {
-    padding: 8px 20px !important;
-    font-size: 1.1rem !important;
-  }
-  
-  .header-inicio {
-    padding: 8px 20px 3px !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .titulo-principal h1 {
-    font-size: 2rem !important;
-    margin-bottom: 3px !important;
-  }
-  
-  .subtitulo p {
-    font-size: 1rem !important;
-    margin-bottom: 3px !important;
-  }
-
-  /* Responsive para las nuevas secciones */
-  .header-inicio {
-    margin: 30px auto 60px auto;
-    padding: 20px 15px 15px;
-  }
-  
+/* Asegurar layout de dos columnas en pantallas grandes */
+@media (min-width: 1025px) {
   .contenido-principal {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    padding: 15px;
-    margin: 20px auto 30px auto;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 40px auto 40px auto;
+    padding: 20px;
   }
-
+  
   .seccion-izquierda,
   .seccion-derecha {
-    border-radius: 15px;
-  }
-
-  .formulario-contenedor {
-    padding: 20px;
-  }
-
-  .formulario-header h2 {
-    font-size: 1.5rem;
-  }
-
-  .formulario-header p {
-    font-size: 0.9rem;
-  }
-
-  .input-campo {
-    padding: 10px 12px;
-    font-size: 0.9rem;
-  }
-
-  .btn-iniciar {
-    padding: 12px 15px;
-    font-size: 1rem;
-  }
-
-  .info-adicional {
-    padding: 20px;
-  }
-
-  .tarjeta-info h3 {
-    font-size: 1.5rem;
-    margin-bottom: 15px;
-  }
-
-  .tarjeta-info li {
-    font-size: 0.9rem;
-    margin-bottom: 10px;
+    min-height: 400px;
   }
 }
 
-/* Responsive para tablets */
-@media (max-width: 768px) {
-  .header-inicio {
-    margin: 20px auto 50px auto;
-    padding: 15px 10px 10px;
-  }
-  
-  .contenido-principal {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    padding: 10px;
-    max-width: 100%;
-    margin: 15px auto 20px auto;
-  }
-
-  .seccion-izquierda,
-  .seccion-derecha {
-    border-radius: 12px;
-  }
-
-  .formulario-contenedor {
-    padding: 15px;
-  }
-
-  .formulario-header h2 {
-    font-size: 1.3rem;
-  }
-
-  .formulario-header p {
-    font-size: 0.8rem;
-  }
-
-  .input-campo {
-    padding: 8px 10px;
-    font-size: 0.8rem;
-  }
-
-  .btn-iniciar {
-    padding: 10px 12px;
-    font-size: 0.9rem;
-  }
-
-  .info-adicional {
-    padding: 15px;
-  }
-
-  .tarjeta-info h3 {
-    font-size: 1.3rem;
-    margin-bottom: 12px;
-  }
-
-  .tarjeta-info li {
-    font-size: 0.8rem;
-    margin-bottom: 8px;
-  }
-}
 
