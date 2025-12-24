@@ -185,14 +185,32 @@ function App() {
     // Solo ocultar el reloj
     setMostrarReloj(false);
     
+    // Obtener nota final acumulada antes de actualizar la sesión
+    let notaFinalAcumulada = 0;
+    if (sesionJuego) {
+      try {
+        const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+        const sesionData = sesionActual.data || sesionActual;
+        notaFinalAcumulada = sesionData.puntuacionTotal || 0;
+      } catch (error) {
+        console.error('Error al obtener sesión para calcular nota final:', error);
+      }
+    }
+    
+    // Calcular nota del juego (0-10): puntuación total dividida entre 10
+    const notaJuego = Math.round(notaFinalAcumulada / 10); // Redondear a entero (0-10)
+    
     // Actualizar sesión de juego en el backend - tiempo agotado
     if (sesionJuego) {
       try {
         await apiService.actualizarSesion(sesionJuego.id, {
           fecha_fin: new Date().toISOString(),
           tiempo_agotado: true,
-          razon_fin_juego: 'TIEMPO_AGOTADO'
+          razon_fin_juego: 'TIEMPO_AGOTADO',
+          puntuacionTotal: notaFinalAcumulada,
+          puntuacionNotas: notaJuego
         });
+        console.log(`✅ Tiempo agotado. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
       } catch (error) {
         console.error('Error al actualizar sesión por tiempo agotado:', error);
       }
@@ -298,7 +316,7 @@ function App() {
       {/* Reloj Flotante - aparece durante todo el juego */}
       {mostrarReloj && (
         <RelojFlotante 
-          tiempoInicial={1800}
+          tiempoInicial={2400}
           onTiempoAgotado={handleTiempoAgotado}
         />
       )}

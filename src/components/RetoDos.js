@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './RetoDos.css';
 import apiService from '../services/api';
+import ReviewReto2Modal from './ReviewReto2Modal';
+import { PUNTOS_POR_BLANK_RETO_2 } from '../constants/puntuacion';
 
 const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
   const [blanks, setBlanks] = useState({
@@ -39,6 +41,7 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
   const [mostrarCoronaReto2, setMostrarCoronaReto2] = useState(false);
   const [coronaPresionadaReto2, setCoronaPresionadaReto2] = useState(false);
   const [coronaDesaparecidaReto2, setCoronaDesaparecidaReto2] = useState(false);
+  const [mostrarReviewModal, setMostrarReviewModal] = useState(false); // Modal de review
 
   const handleDragStart = (e, optionId) => {
     if (paginaDesactivada) {
@@ -135,7 +138,8 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
       }
     });
 
-    const todasCorrectas = correctas === 4;
+    // Calcular puntuación: 5 puntos por blank correcto
+    const puntuacionReto2 = correctas * PUNTOS_POR_BLANK_RETO_2;
 
     // Guardar respuesta en el backend
     if (sesionJuego) {
@@ -155,30 +159,64 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
           totalCasillas: 4,
           tiempoRespuesta: tiempoReal
         });
-        console.log(`✅ Reto 2 guardado: ${correctas}/4 casillas correctas`);
+        console.log(`✅ Reto 2 guardado: ${correctas}/4 casillas correctas. Puntuación: ${puntuacionReto2}/20`);
       } catch (error) {
         console.error('❌ Error al guardar respuesta del Reto 2:', error);
+      }
+    }
+
+    // Obtener puntuación actual de la sesión para calcular la nota final acumulada
+    let notaFinalAcumulada = puntuacionReto2;
+    if (sesionJuego) {
+      try {
+        const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+        const sesionData = sesionActual.data || sesionActual;
+        // Sumar puntuaciones de otros retos (reto 1 y reto 3) si existen
+        const puntuacionReto1 = sesionData.puntuacionReto1 || 0;
+        const puntuacionReto3 = sesionData.puntuacionReto3 || 0;
+        notaFinalAcumulada = puntuacionReto1 + puntuacionReto2 + puntuacionReto3;
+      } catch (error) {
+        console.error('Error al obtener sesión:', error);
+        // Si hay error, usar solo la puntuación del reto 2
+        notaFinalAcumulada = puntuacionReto2;
+      }
+    }
+
+    // Calcular nota del juego (0-10): puntuación total dividida entre 10
+    const notaJuego = Math.round(notaFinalAcumulada / 10); // Redondear a entero (0-10)
+
+    // Actualizar sesión en el backend con la nota final acumulada
+    if (sesionJuego) {
+      try {
+        await apiService.actualizarSesion(sesionJuego.id, {
+          puntuacionReto2: puntuacionReto2,
+          puntuacionTotal: notaFinalAcumulada,
+          puntuacionNotas: notaJuego
+        });
+        console.log(`✅ Reto 2 completado. Puntuación: ${puntuacionReto2}/20. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
+      } catch (error) {
+        console.error('❌ Error al actualizar sesión:', error);
       }
     }
 
     // Desactivar estado de carga
     setEnviando(false);
 
-    if (todasCorrectas) {
-      // Respuesta correcta - desactivar página
+    // NUEVA LÓGICA: Mostrar mensaje de victoria o derrota según blanks correctos
+    const esVictoria = correctas > 2;
+    if (esVictoria) {
+      // Más de 2 blanks correctos: victoria
       setQuipuImagen('niñofeliz.png');
       setQuipuMensaje('¡Sí, lo logramos y mira!');
-      setQuipuActivado(true);
-      setMostrarMensaje(true);
-      setPaginaDesactivada(true);
     } else {
-      // Respuesta incorrecta - desactivar página
+      // 2 o menos blanks correctos: derrota
       setQuipuImagen('niñoasombrado.png');
-      setQuipuMensaje('¡Oh no! Algo está mal, corrígelo.');
-      setQuipuActivado(true);
-      setMostrarMensaje(true);
-      setPaginaDesactivada(true);
+      setQuipuMensaje('¡No, salgamos de aquí rapido!');
     }
+    
+    setQuipuActivado(true);
+    setMostrarMensaje(true);
+    setPaginaDesactivada(true);
   };
 
   const handleQuipuClick = () => {
@@ -188,43 +226,29 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
     if (quipuMensaje === '¡Se necesita llenar el texto!' && mostrarMensaje) {
       setQuipuActivado(false);
       setPaginaDesactivada(false);
+      return;
     }
     
-    // Si es el mensaje de respuesta incorrecta, reactivar y reiniciar las palabras
-    if (quipuMensaje === '¡Oh no! Algo está mal, corrígelo.' && mostrarMensaje) {
-      // Reiniciar todas las palabras a sus opciones originales
-      setBlanks({
-        'blank-1': null,
-        'blank-2': null,
-        'blank-3': null,
-        'blank-4': null,
-      });
-      
-      setOptions([
-        { id: 'opt-1', text: 'factores' },
-        { id: 'opt-2', text: 'ax²+bx+c' },
-        { id: 'opt-3', text: 'descomponer' },
-        { id: 'opt-4', text: 'factorizacion' },
-      ]);
-      
-      setQuipuActivado(false);
-      setPaginaDesactivada(false);
-    }
-    
-    // Si es el mensaje de respuesta correcta, mostrar corona y pergamino
-    if (quipuMensaje === '¡Sí, lo logramos y mira!' && mostrarMensaje) {
+    // Si es cualquier mensaje (victoria o derrota), mostrar corona y pergamino
+    if ((quipuMensaje === '¡Sí, lo logramos y mira!' || quipuMensaje === '¡No, salgamos de aquí rapido!') && mostrarMensaje) {
       setMostrarCoronaReto2(true);
       setTimeout(() => {
         setCoronaPresionadaReto2(true);
       }, 500);
     }
     
-    // Si es el mensaje final con "PA", volver al centro de control
+    // Si es el mensaje final con "PA", mostrar modal de review
     if (coronaDesaparecidaReto2 && coronaPresionadaReto2 && mostrarMensaje) {
-      // Volver al centro de control marcando el reto 2 como completado
-      if (onVolverCentroControl) {
-        onVolverCentroControl(2); // Pasar el ID del reto 2
-      }
+      // Mostrar modal de review
+      setQuipuActivado(false);
+      setMostrarReviewModal(true);
+    }
+  };
+
+  const handleContinuarReview = () => {
+    setMostrarReviewModal(false);
+    if (onVolverCentroControl) {
+      onVolverCentroControl(2); // Volver al centro de control marcando el reto 2 como completado
     }
   };
 
@@ -393,6 +417,20 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
         <div className="instruccion-corona-reto2">
           <p>Presiona la corona</p>
         </div>
+      )}
+
+      {/* Modal de Review */}
+      {mostrarReviewModal && (
+        <ReviewReto2Modal 
+          blanksUsuario={blanks}
+          blanksCorrectos={{
+            'blank-1': 'factorizacion',
+            'blank-2': 'descomponer',
+            'blank-3': 'ax²+bx+c',
+            'blank-4': 'factores'
+          }}
+          onContinuar={handleContinuarReview}
+        />
       )}
     </div>
   );

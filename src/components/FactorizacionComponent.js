@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './FactorizacionComponent.css';
 import apiService from '../services/api';
+import ReviewReto3Modal from './ReviewReto3Modal';
+import { PUNTOS_POR_PREGUNTA_RETO_3, PENALIZACION_POR_VALIDACION_RETO_3 } from '../constants/puntuacion';
 
 const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego }) => {
   // Scroll al inicio cuando se monta el componente
@@ -491,7 +493,28 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
     setIntentosValidacion1(0);
     setIntentosValidacion2(0);
     setIntentosValidacion3(0);
+    
+    // Inicializar puntuación de la pregunta actual en 7 puntos
+    const preguntaNum = indiceEcuacion + 1;
+    setPuntuacionesPreguntas(prev => {
+      if (!prev[preguntaNum]) {
+        return { ...prev, [preguntaNum]: PUNTOS_POR_PREGUNTA_RETO_3 };
+      }
+      return prev;
+    });
   }, [indiceEcuacion]);
+  
+  // Función para restar puntos cuando una validación es incorrecta
+  const restarPuntosValidacion = (preguntaNum) => {
+    setPuntuacionesPreguntas(prev => {
+      const puntuacionActual = prev[preguntaNum] || PUNTOS_POR_PREGUNTA_RETO_3;
+      const nuevaPuntuacion = Math.max(0, puntuacionActual - PENALIZACION_POR_VALIDACION_RETO_3);
+      return { ...prev, [preguntaNum]: nuevaPuntuacion };
+    });
+    // Retornar la nueva puntuación calculada
+    const puntuacionActual = puntuacionesPreguntas[preguntaNum] || PUNTOS_POR_PREGUNTA_RETO_3;
+    return Math.max(0, puntuacionActual - PENALIZACION_POR_VALIDACION_RETO_3);
+  };
 
   // Imágenes de nudos (incluyendo operadores)
   const nudosOrden = ['1','2','3','4','5','6','7','8','9','10','x','x2','plus','minus','times','divided'];
@@ -634,12 +657,48 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
   const [mostrarCoronaReto3, setMostrarCoronaReto3] = useState(false);
   const [coronaPresionadaReto3, setCoronaPresionadaReto3] = useState(false);
   const [coronaDesaparecidaReto3, setCoronaDesaparecidaReto3] = useState(false);
+  const [mostrarReviewModal, setMostrarReviewModal] = useState(false); // Modal de review
+  
+  // Estados para rastrear puntuación de cada pregunta
+  const [puntuacionesPreguntas, setPuntuacionesPreguntas] = useState({}); // { preguntaNum: puntuacion }
+  const [ejerciciosCompletados, setEjerciciosCompletados] = useState([]); // Array de ejercicios completados con su puntuación
+  const [esVictoriaReto3, setEsVictoriaReto3] = useState(false); // Para saber si es victoria o derrota
+  const [mensajeFinalReto3, setMensajeFinalReto3] = useState(''); // Mensaje final de victoria o derrota
+
+  const calcularPuntuacionYMostrarReview = async () => {
+    // La puntuación ya se ha ido sumando pregunta por pregunta
+    // Solo necesitamos obtener la puntuación final de la sesión
+    if (sesionJuego) {
+      try {
+        const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+        const sesionData = sesionActual.data || sesionActual;
+        const puntuacionReto3 = sesionData.puntuacionReto3 || 0;
+        const notaFinalAcumulada = sesionData.puntuacionTotal || 0;
+        const notaJuego = sesionData.puntuacionNotas || 0;
+        
+        console.log(`✅ Reto 3 completado. Puntuación: ${puntuacionReto3}/70. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
+      } catch (error) {
+        console.error('❌ Error al obtener sesión:', error);
+      }
+    }
+
+    // Mostrar modal de review
+    setMostrarReviewModal(true);
+  };
+
+  const handleContinuarReview = () => {
+    setMostrarReviewModal(false);
+    // Volver al centro de control
+    if (onCompletarReto3) {
+      onCompletarReto3();
+    }
+  };
 
   const handleCoronaClickReto3 = () => {
     setCoronaDesaparecidaReto3(true);
     setCoronaPresionadaReto3(true);
     setMostrarCoronaReto3(false);
-    // Activar el quipu con mensaje final inmediatamente
+    // Activar el quipu con mensaje del código (QUIP)
     setMostrarRespuesta(true);
     setMostrarPrimerParentesis(true);
     setMostrarSegundoParentesis(true);
@@ -654,6 +713,24 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
 
     // Activar estado de carga
     setEnviando(true);
+
+    // Obtener puntuación de la pregunta actual
+    const preguntaNum = indiceEcuacion + 1;
+    const puntuacionPregunta = puntuacionesPreguntas[preguntaNum] || 0;
+
+    // Guardar ejercicio completado en el estado local
+    const ejercicioCompletado = {
+      ejercicioNumero: preguntaNum,
+      ecuacionOriginal: ecuaciones[indiceEcuacion],
+      puntuacion: puntuacionPregunta,
+      validacion1: estadoValidacionIzquierda === 'correcto',
+      validacion2: estadoValidacionDerecha === 'correcto',
+      validacion3: estadoValidacionTanteo === 'correcto'
+    };
+    setEjerciciosCompletados(prev => {
+      const nuevosEjercicios = prev.filter(e => e.ejercicioNumero !== preguntaNum);
+      return [...nuevosEjercicios, ejercicioCompletado];
+    });
 
     // Guardar la respuesta del ejercicio completado
     if (sesionJuego) {
@@ -686,19 +763,69 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
             respuesta: 'Validación del método de tanteo'
           }
         });
-        console.log(`✅ Ejercicio ${indiceEcuacion + 1} del Reto 3 guardado en el backend`);
+        console.log(`✅ Ejercicio ${indiceEcuacion + 1} del Reto 3 guardado en el backend. Puntuación: ${puntuacionPregunta}/7`);
       } catch (error) {
         console.error('❌ Error al guardar ejercicio del Reto 3:', error);
+      }
+    }
+
+    // Sumar puntuación de esta pregunta a la nota final acumulada
+    if (sesionJuego && puntuacionPregunta > 0) {
+      try {
+        // Obtener puntuación actual de la sesión
+        const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+        const sesionData = sesionActual.data || sesionActual;
+        
+        // Sumar puntuación de esta pregunta al reto 3
+        const puntuacionReto3Actual = sesionData.puntuacionReto3 || 0;
+        const nuevaPuntuacionReto3 = puntuacionReto3Actual + puntuacionPregunta;
+        
+        // Calcular nota final acumulada
+        const puntuacionReto1 = sesionData.puntuacionReto1 || 0;
+        const puntuacionReto2 = sesionData.puntuacionReto2 || 0;
+        const notaFinalAcumulada = puntuacionReto1 + puntuacionReto2 + nuevaPuntuacionReto3;
+        const notaJuego = Math.round(notaFinalAcumulada / 10);
+        
+        // Actualizar sesión con la nueva puntuación acumulada
+        await apiService.actualizarSesion(sesionJuego.id, {
+          puntuacionReto3: nuevaPuntuacionReto3,
+          puntuacionTotal: notaFinalAcumulada,
+          puntuacionNotas: notaJuego
+        });
+        
+        console.log(`✅ Pregunta ${preguntaNum} del Reto 3 guardada. Puntuación pregunta: ${puntuacionPregunta}/7. Puntuación Reto 3 acumulada: ${nuevaPuntuacionReto3}/70. Nota final: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
+      } catch (error) {
+        console.error('❌ Error al actualizar sesión con puntuación de pregunta:', error);
       }
     }
 
     // Desactivar estado de carga
     setEnviando(false);
 
-    // Si es la última ecuación, mostrar modal de felicitaciones
+    // Si es la última ecuación, calcular victoria/derrota y mostrar mensaje apropiado
     if (indiceEcuacion === ecuaciones.length - 1) {
-      // Mostrar overlay de corona (estilo Reto 1/2) para finalizar
-      setMostrarCoronaReto3(true);
+      // Incluir la pregunta actual en el cálculo
+      const todosLosEjercicios = [...ejerciciosCompletados, ejercicioCompletado];
+      
+      // Calcular cuántas preguntas fueron correctas (> 0) e incorrectas (= 0)
+      const preguntasCorrectas = todosLosEjercicios.filter(e => e.puntuacion > 0).length;
+      const preguntasIncorrectas = todosLosEjercicios.filter(e => e.puntuacion === 0).length;
+      
+      // Si 5 o más preguntas fueron incorrectas: derrota
+      // Si más de 5 preguntas fueron correctas: victoria
+      const esVictoria = preguntasIncorrectas < 5 && preguntasCorrectas > 5;
+      setEsVictoriaReto3(esVictoria);
+      
+      if (esVictoria) {
+        setMensajeFinalReto3("¡Excelente! Has dominado la factorización.");
+      } else {
+        setMensajeFinalReto3("¡No, salgamos de aquí rapido!");
+      }
+      
+      // Mostrar quipu con mensaje de victoria o derrota
+      setMostrarRespuesta(true);
+      setMostrarPrimerParentesis(true);
+      setMostrarSegundoParentesis(true);
       return;
     }
     
@@ -1162,9 +1289,18 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
           mostrar: false
         });
       } else {
+        // Restar puntos por validación incorrecta
+        const preguntaNum = indiceEcuacion + 1;
+        const puntuacionActual = restarPuntosValidacion(preguntaNum);
+        
+        let mensaje = `La suma de productos (${sumaCalculada}x) no es igual al término medio del trinomio (${terminos.coeficienteMedio}x). Debes cambiar los valores o signos de los factores para que coincidan.`;
+        if (puntuacionActual === 0) {
+          mensaje = 'Se te acabaron los intentos. Puedes continuar.';
+        }
+        
         setValidacionTanteo({
           esCorrecta: false,
-          mensaje: `La suma de productos (${sumaCalculada}x) no es igual al término medio del trinomio (${terminos.coeficienteMedio}x). Debes cambiar los valores o signos de los factores para que coincidan.`,
+          mensaje: mensaje,
           mostrar: true
         });
         setEstadoValidacionTanteo('incorrecto');
@@ -1542,9 +1678,18 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
           mostrar: false
         });
       } else {
+        // Restar puntos por validación incorrecta
+        const preguntaNum = indiceEcuacion + 1;
+        const puntuacionActual = restarPuntosValidacion(preguntaNum);
+        
+        let mensaje = `Incorrecto. La multiplicación de los factores debe ser ${terminos.terminoConstante}`;
+        if (puntuacionActual === 0) {
+          mensaje = 'Se te acabaron los intentos. Puedes continuar.';
+        }
+        
         setValidacion({
           esCorrecta: false,
-          mensaje: `Incorrecto. La multiplicación de los factores debe ser ${terminos.terminoConstante}`,
+          mensaje: mensaje,
           mostrar: true
         });
         setFactoresDerechosValidados(false);
@@ -1668,9 +1813,19 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
         });
       } else {
         const variableEsperada = gradoEsperado === 2 ? 'x²' : gradoEsperado === 4 ? 'x⁴' : `x^${gradoEsperado}`;
+        
+        // Restar puntos por validación incorrecta
+        const preguntaNum = indiceEcuacion + 1;
+        const puntuacionActual = restarPuntosValidacion(preguntaNum);
+        
+        let mensaje = `Incorrecto: La multiplicación de los factores debe ser ${coeficienteEsperado}${variableEsperada}`;
+        if (puntuacionActual === 0) {
+          mensaje = 'Se te acabaron los intentos. Puedes continuar.';
+        }
+        
         setValidacion({
           esCorrecta: false,
-          mensaje: `Incorrecto: La multiplicación de los factores debe ser ${coeficienteEsperado}${variableEsperada}`,
+          mensaje: mensaje,
           mostrar: true
         });
         setFactoresIzquierdosValidados(false);
@@ -2391,6 +2546,8 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                   <>
                     ¡¡Vamos!! ¡Es la última corona y el pergamino dice: <span className="mensaje-quip">QUIP</span>!!
                   </>
+                ) : indiceEcuacion === ecuaciones.length - 1 && mensajeFinalReto3 ? (
+                  mensajeFinalReto3
                 ) : (
                   `¡Genial! ¡Vamos ${indiceEcuacion + 1}/${ecuaciones.length}!`
                 )}
@@ -2399,8 +2556,22 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
           </div>
           <div 
             className="quipufactor-personaje" 
-            onClick={enviando ? null : (coronaDesaparecidaReto3 ? (() => { if (onCompletarReto3) onCompletarReto3(); }) : cambiarSiguienteEcuacion)} 
-            title={enviando ? 'Guardando...' : (coronaDesaparecidaReto3 ? 'Finalizar' : (indiceEcuacion === ecuaciones.length - 1 ? 'Terminar' : 'Siguiente Ecuación'))}
+            onClick={enviando ? null : (() => {
+              if (coronaDesaparecidaReto3) {
+                // Si ya se mostró el código, mostrar review
+                calcularPuntuacionYMostrarReview();
+              } else if (indiceEcuacion === ecuaciones.length - 1) {
+                // Si es la última pregunta y se completó, mostrar corona
+                setMostrarCoronaReto3(true);
+                setMostrarRespuesta(false);
+                setMostrarPrimerParentesis(false);
+                setMostrarSegundoParentesis(false);
+              } else {
+                // Continuar con siguiente pregunta
+                cambiarSiguienteEcuacion();
+              }
+            })} 
+            title={enviando ? 'Guardando...' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Siguiente Ecuación'))}
             style={{
               opacity: enviando ? 0.6 : 1,
               cursor: enviando ? 'not-allowed' : 'pointer'
@@ -2412,7 +2583,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
               className="quipufactor-img"
             />
             <div className="quipufactor-texto-cta">
-              {enviando ? '⏳ Guardando...' : (coronaPresionadaReto3 ? 'Finalizar' : 'Presióname')}
+              {enviando ? '⏳ Guardando...' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Presióname'))}
             </div>
           </div>
         </div>
@@ -2440,6 +2611,14 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
             <p>Presiona la corona</p>
           </div>
         </>
+      )}
+
+      {/* Modal de Review */}
+      {mostrarReviewModal && (
+        <ReviewReto3Modal 
+          ejercicios={ejerciciosCompletados}
+          onContinuar={handleContinuarReview}
+        />
       )}
     </div>
   );
