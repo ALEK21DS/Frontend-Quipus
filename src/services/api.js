@@ -5,7 +5,10 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
-    console.log('🌐 API conectada a:', this.baseURL);
+    // Solo mostrar en desarrollo por seguridad
+    if (process.env.NODE_ENV !== 'production') {
+      console.log('🌐 API conectada a:', this.baseURL);
+    }
   }
 
   // Método genérico para hacer peticiones HTTP con timeout
