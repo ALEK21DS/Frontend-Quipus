@@ -722,6 +722,8 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
   };
 
   const handleCoronaClickReto3 = () => {
+    // Asegurar que intentosAgotados esté en false para que el flujo funcione
+    setIntentosAgotados(false);
     setCoronaDesaparecidaReto3(true);
     setCoronaPresionadaReto3(true);
     setMostrarCoronaReto3(false);
@@ -2632,7 +2634,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
           </div>
           <div 
             className="quipufactor-personaje" 
-            onClick={enviando || quipuPresionado ? null : (async () => {
+            onClick={enviando || quipuPresionado || reviewPresionado ? null : (async () => {
               if (intentosAgotados) {
                 // Si se acabaron los intentos y es el último ejercicio
                 if (indiceEcuacion === ecuaciones.length - 1) {
@@ -2716,6 +2718,8 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                         }
                       } else {
                         // Si más de 5 preguntas fueron correctas: victoria (mostrar corona)
+                        // Resetear intentosAgotados para que el flujo funcione correctamente
+                        setIntentosAgotados(false);
                         setMostrarCoronaReto3(true);
                         setMostrarRespuesta(false);
                         setMostrarPrimerParentesis(false);
@@ -2723,7 +2727,12 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                       }
                     } catch (error) {
                       console.error('Error al guardar último ejercicio:', error);
+                      // Resetear intentosAgotados incluso si hay error
+                      setIntentosAgotados(false);
                     }
+                  } else {
+                    // Si no hay sesión, resetear intentosAgotados de todas formas
+                    setIntentosAgotados(false);
                   }
                 } else {
                   // Si no es el último, continuar al siguiente ejercicio
