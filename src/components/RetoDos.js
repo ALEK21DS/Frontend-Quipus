@@ -30,6 +30,7 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
   const [quipuMensaje, setQuipuMensaje] = useState('');
   const [paginaDesactivada, setPaginaDesactivada] = useState(false);
   const [enviando, setEnviando] = useState(false);  // Estado de carga
+  const [respuestaEnviada, setRespuestaEnviada] = useState(false);  // Estado para deshabilitar botón permanentemente
   const [tiempoInicio, setTiempoInicio] = useState(Date.now());  // Para rastrear tiempo de respuesta
   
   // Inicializar tiempo cuando se monta el componente
@@ -201,6 +202,8 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
 
     // Desactivar estado de carga
     setEnviando(false);
+    // Marcar que la respuesta ya fue enviada (deshabilitar botón permanentemente)
+    setRespuestaEnviada(true);
 
     // NUEVA LÓGICA: Mostrar mensaje de victoria o derrota según blanks correctos
     const esVictoria = correctas > 2;
@@ -349,13 +352,13 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
               <button 
                 className="reto-dos-btn-enviar" 
                 onClick={handleEnviar}
-                disabled={enviando}
+                disabled={enviando || respuestaEnviada}
                 style={{
-                  opacity: enviando ? 0.6 : 1,
-                  cursor: enviando ? 'not-allowed' : 'pointer'
+                  opacity: (enviando || respuestaEnviada) ? 0.6 : 1,
+                  cursor: (enviando || respuestaEnviada) ? 'not-allowed' : 'pointer'
                 }}
               >
-                {enviando ? '⏳ Enviando...' : 'Enviar Respuestas'}
+                {enviando ? '⏳ Enviando...' : respuestaEnviada ? 'Respuesta Enviada' : 'Enviar Respuestas'}
               </button>
             </div>
           </div>

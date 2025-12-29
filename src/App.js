@@ -295,6 +295,7 @@ function App() {
           datosUsuario={datosUsuario} 
           onCompletarReto3={handleCompletarReto3}
           sesionJuego={sesionJuego}
+          onMostrarJuegoTerminado={() => setMostrarQuipoTiempoAgotado(true)}
         />
       )}
       

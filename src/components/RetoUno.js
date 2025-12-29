@@ -110,12 +110,7 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
       esCorrecta = respuestaSeleccionada === 'operadores';
     }
     
-    setValidacion({
-      mostrada: true,
-      esCorrecta: esCorrecta
-    });
-
-    // Guardar respuesta en el backend y en el estado local
+    // Guardar respuesta en el backend y en el estado local PRIMERO
     if (sesionJuego && respuestaUsuarioLetra) {
       try {
         // Calcular tiempo real de respuesta en segundos
@@ -126,12 +121,44 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
           preguntaNumero: preguntaActual,
           respuestaCorrecta: respuestaCorrectaLetra,
           respuestaUsuario: respuestaUsuarioLetra,
-          tiempoRespuesta: tiempoReal
+          tiempoRespuesta: tiempoReal,
+          esCorrecta: esCorrecta // Agregar esCorrecta al objeto
         };
         
         await apiService.guardarRespuestaReto1(respuestaData);
         
-        // Guardar respuesta en el estado local para el review
+        // Si es la pregunta 4, calcular victoria/derrota ANTES de actualizar el estado
+        if (preguntaActual === 4) {
+          // Calcular respuestas correctas: usar respuestasGuardadas anteriores + la actual
+          const todasLasRespuestas = [...respuestasGuardadas.filter(r => r.preguntaNumero !== preguntaActual), respuestaData];
+          const respuestasCorrectas = todasLasRespuestas.filter(r => r.esCorrecta === true).length;
+          // Victoria: 3 o más respuestas correctas (3 o 4)
+          const esVictoria = respuestasCorrectas >= 3;
+          
+          console.log(`📊 Reto 1 - Respuestas correctas: ${respuestasCorrectas}/4, Victoria: ${esVictoria}`);
+          console.log(`📊 Respuestas:`, todasLasRespuestas.map(r => `P${r.preguntaNumero}: ${r.esCorrecta ? '✓' : '✗'}`));
+          
+          // Establecer mensaje apropiado directamente
+          setValidacion({
+            mostrada: true,
+            esCorrecta: esCorrecta,
+            mensaje: esVictoria 
+              ? "¡Se abrió la puerta, vamos al siguiente reto!"
+              : "Encontre esto. ¡Salgamos de aquí"
+          });
+          
+          setEsVictoria(esVictoria);
+          setMostrarMensaje(true);
+          setMensajeActual(0);
+        } else {
+          // Si NO es la pregunta 4, establecer validación normal
+          setValidacion({
+            mostrada: true,
+            esCorrecta: esCorrecta
+          });
+        }
+        
+        // Guardar respuesta en el estado local para el review (después de calcular)
         setRespuestasGuardadas(prev => {
           const nuevasRespuestas = prev.filter(r => r.preguntaNumero !== preguntaActual);
           return [...nuevasRespuestas, respuestaData];
@@ -179,12 +206,9 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
       setQuipuActivado(false);
       setPreguntaActual(preguntaActual + 1);
     } else {
-      // Si es la pregunta 4 (última), calcular respuestas correctas y mostrar mensajes apropiados
-      const respuestasCorrectas = respuestasGuardadas.filter(r => r.respuestaUsuario === r.respuestaCorrecta).length;
-      const esVictoria = respuestasCorrectas > 2;
-      setEsVictoria(esVictoria);
-      
-      if (mostrarMensaje) {
+      // Si es la pregunta 4 (última), el mensaje ya se estableció en handleEnviar
+      // Solo avanzar en la secuencia de mensajes
+      if (mostrarMensaje && validacion.mensaje) {
         // Avanzar al siguiente mensaje en la secuencia
         if (esVictoria) {
           // Secuencia de victoria: "¡Se abrió la puerta..." → "¡Espera! ¿Qué es esto?..." → corona
@@ -207,23 +231,6 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
             setQuipuActivado(false);
           }
         }
-      } else {
-        // Mostrar primer mensaje
-        setMostrarMensaje(true);
-        if (esVictoria) {
-          setValidacion(prev => ({
-            ...prev,
-            mensaje: "¡Se abrió la puerta, vamos al siguiente reto!",
-            mensajeFinal: false
-          }));
-        } else {
-          setValidacion(prev => ({
-            ...prev,
-            mensaje: "Encontre esto. ¡Salgamos de aquí",
-            mensajeFinal: false
-          }));
-        }
-        setMensajeActual(0);
       }
     }
   };

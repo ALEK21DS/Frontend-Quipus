@@ -4,7 +4,7 @@ import apiService from '../services/api';
 import ReviewReto3Modal from './ReviewReto3Modal';
 import { PUNTOS_POR_PREGUNTA_RETO_3, PENALIZACION_POR_VALIDACION_RETO_3 } from '../constants/puntuacion';
 
-const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego }) => {
+const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, onMostrarJuegoTerminado }) => {
   // Scroll al inicio cuando se monta el componente
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -453,6 +453,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
   const [tiempoInicioValidacion1, setTiempoInicioValidacion1] = useState(Date.now());
   const [tiempoInicioValidacion2, setTiempoInicioValidacion2] = useState(Date.now());
   const [tiempoInicioValidacion3, setTiempoInicioValidacion3] = useState(Date.now());
+  const [intentosAgotados, setIntentosAgotados] = useState(false); // Para bloquear inputs cuando se acaben los intentos
 
   // Ocultar validaciones automáticamente después de un tiempo
   useEffect(() => {
@@ -493,6 +494,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
     setIntentosValidacion1(0);
     setIntentosValidacion2(0);
     setIntentosValidacion3(0);
+    setIntentosAgotados(false); // Resetear el estado de intentos agotados
     
     // Inicializar puntuación de la pregunta actual en 7 puntos
     const preguntaNum = indiceEcuacion + 1;
@@ -509,6 +511,12 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
     setPuntuacionesPreguntas(prev => {
       const puntuacionActual = prev[preguntaNum] || PUNTOS_POR_PREGUNTA_RETO_3;
       const nuevaPuntuacion = Math.max(0, puntuacionActual - PENALIZACION_POR_VALIDACION_RETO_3);
+      
+      // Si la puntuación llega a 0, bloquear los inputs
+      if (nuevaPuntuacion === 0) {
+        setIntentosAgotados(true);
+      }
+      
       return { ...prev, [preguntaNum]: nuevaPuntuacion };
     });
     // Retornar la nueva puntuación calculada
@@ -664,6 +672,9 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
   const [ejerciciosCompletados, setEjerciciosCompletados] = useState([]); // Array de ejercicios completados con su puntuación
   const [esVictoriaReto3, setEsVictoriaReto3] = useState(false); // Para saber si es victoria o derrota
   const [mensajeFinalReto3, setMensajeFinalReto3] = useState(''); // Mensaje final de victoria o derrota
+  const [mostrarHasPerdido, setMostrarHasPerdido] = useState(false); // Para mostrar "¡Has perdido!" en el centro
+  const [quipuPresionado, setQuipuPresionado] = useState(false); // Para deshabilitar el quipu cuando se presiona
+  const [reviewPresionado, setReviewPresionado] = useState(false); // Para deshabilitar el quipu de review cuando se presiona
 
   const calcularPuntuacionYMostrarReview = async () => {
     // La puntuación ya se ha ido sumando pregunta por pregunta
@@ -761,7 +772,8 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
             intento: intentosValidacion3,
             tiempo: tiempoValidacion3,
             respuesta: 'Validación del método de tanteo'
-          }
+          },
+          puntuacionFinal: puntuacionPregunta  // Puntuación final del ejercicio (0-7)
         });
         console.log(`✅ Ejercicio ${indiceEcuacion + 1} del Reto 3 guardado en el backend. Puntuación: ${puntuacionPregunta}/7`);
       } catch (error) {
@@ -822,7 +834,8 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
         setMensajeFinalReto3("¡No, salgamos de aquí rapido!");
       }
       
-      // Mostrar quipu con mensaje de victoria o derrota
+      // IMPORTANTE: La pregunta ya se guardó arriba en esta función (línea 752-774)
+      // Solo mostrar quipu con mensaje de victoria o derrota
       setMostrarRespuesta(true);
       setMostrarPrimerParentesis(true);
       setMostrarSegundoParentesis(true);
@@ -1296,6 +1309,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
         let mensaje = `La suma de productos (${sumaCalculada}x) no es igual al término medio del trinomio (${terminos.coeficienteMedio}x). Debes cambiar los valores o signos de los factores para que coincidan.`;
         if (puntuacionActual === 0) {
           mensaje = 'Se te acabaron los intentos. Puedes continuar.';
+          setIntentosAgotados(true);
         }
         
         setValidacionTanteo({
@@ -1330,6 +1344,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
 
   // Función para validar el método de tanteo
   const validarMetodoTanteo = () => {
+    // Si se acabaron los intentos, no permitir más validaciones
+    if (intentosAgotados) {
+      return;
+    }
+    
     try {
       if (!valores.suma) {
         setValidacionTanteo({
@@ -1624,6 +1643,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
 
   // Función para validar la multiplicación de factores de la columna derecha
   const validarMultiplicacionFactoresDerechos = () => {
+    // Si se acabaron los intentos, no permitir más validaciones
+    if (intentosAgotados) {
+      return;
+    }
+    
     try {
       // Incrementar intentos de validación 2
       setIntentosValidacion2(prev => prev + 1);
@@ -1685,12 +1709,14 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
         let mensaje = `Incorrecto. La multiplicación de los factores debe ser ${terminos.terminoConstante}`;
         if (puntuacionActual === 0) {
           mensaje = 'Se te acabaron los intentos. Puedes continuar.';
+          setIntentosAgotados(true);
         }
         
         setValidacion({
           esCorrecta: false,
           mensaje: mensaje,
-          mostrar: true
+          mostrar: true,
+          esAdvertencia: puntuacionActual === 0
         });
         setFactoresDerechosValidados(false);
         setEstadoValidacionDerecha('incorrecto');
@@ -1712,6 +1738,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
 
   // Función para validar la multiplicación de factores
   const validarMultiplicacionFactores = () => {
+    // Si se acabaron los intentos, no permitir más validaciones
+    if (intentosAgotados) {
+      return;
+    }
+    
     try {
       // Incrementar intentos de validación 1
       setIntentosValidacion1(prev => prev + 1);
@@ -1821,12 +1852,14 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
         let mensaje = `Incorrecto: La multiplicación de los factores debe ser ${coeficienteEsperado}${variableEsperada}`;
         if (puntuacionActual === 0) {
           mensaje = 'Se te acabaron los intentos. Puedes continuar.';
+          setIntentosAgotados(true);
         }
         
         setValidacion({
           esCorrecta: false,
           mensaje: mensaje,
-          mostrar: true
+          mostrar: true,
+          esAdvertencia: puntuacionActual === 0
         });
         setFactoresIzquierdosValidados(false);
         setEstadoValidacionIzquierda('incorrecto');
@@ -1848,7 +1881,8 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
   };
 
   return (
-    <div className={`factorizacion-page ${mostrarCoronaReto3 ? 'blur-background' : ''}`}>
+    <>
+    <div className={`factorizacion-page ${mostrarCoronaReto3 || intentosAgotados ? 'blur-background' : ''}`}>
       {/* Header */}
       <header className="App-header">
         <div className="header-content">
@@ -2078,7 +2112,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                     onFocus={() => manejarFocoFactor('factor1X')}
                     placeholder=""
                     className={`${factoresResaltados ? 'factor-error' : ''} ${factoresResaltadosProducto1 ? 'factor-resaltado-producto1' : ''} ${obtenerClasesValidacionFactores(estadoValidacionIzquierda)} ${factoresSuperioresResaltados ? 'factor-resaltado-azul' : ''}`}
-                    disabled={factoresIzquierdosValidados}
+                    disabled={factoresIzquierdosValidados || intentosAgotados}
                     style={{ display: 'none' }}
                     autoComplete="off"
                   />
@@ -2158,7 +2192,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                     onFocus={() => manejarFocoFactor('factor1Coef')}
                     placeholder=""
                     className={`${factoresResaltados ? 'factor-error' : ''} ${factoresResaltadosProducto2 ? 'factor-resaltado-producto2' : ''} ${obtenerClasesValidacionFactores(estadoValidacionIzquierda)} ${factoresInferioresResaltados ? 'factor-resaltado-verde' : ''}`}
-                    disabled={factoresIzquierdosValidados}
+                    disabled={factoresIzquierdosValidados || intentosAgotados}
                     style={{ display: 'none' }}
                     autoComplete="off"
                   />
@@ -2170,7 +2204,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                 <button
                   className="btn-validar-factores"
                   onClick={validarMultiplicacionFactores}
-                  disabled={factoresIzquierdosValidados}
+                  disabled={factoresIzquierdosValidados || intentosAgotados}
                 >
                   ✓
                 </button>
@@ -2247,7 +2281,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                     onChange={(e) => actualizarValor('factor2Const', e.target.value)}
                     onFocus={() => manejarFocoFactor('factor2Const')}
                     placeholder=""
-                    disabled={!factoresIzquierdosValidados || factoresDerechosValidados}
+                    disabled={!factoresIzquierdosValidados || factoresDerechosValidados || intentosAgotados}
                     className={`${factoresResaltados ? 'factor-error' : ''} ${factoresResaltadosProducto2 ? 'factor-resaltado-producto2' : ''} ${obtenerClasesValidacionFactores(estadoValidacionDerecha)} ${factoresSuperioresResaltados ? 'factor-resaltado-azul' : ''}`}
                     style={{ display: 'none' }}
                     autoComplete="off"
@@ -2302,7 +2336,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                     onChange={(e) => actualizarValor('factor2Num', e.target.value)}
                     onFocus={() => manejarFocoFactor('factor2Num')}
                     placeholder=""
-                    disabled={!factoresIzquierdosValidados || factoresDerechosValidados}
+                    disabled={!factoresIzquierdosValidados || factoresDerechosValidados || intentosAgotados}
                     className={`${factoresResaltados ? 'factor-error' : ''} ${factoresResaltadosProducto1 ? 'factor-resaltado-producto1' : ''} ${obtenerClasesValidacionFactores(estadoValidacionDerecha)} ${factoresInferioresResaltados ? 'factor-resaltado-verde' : ''}`}
                     style={{ display: 'none' }}
                     autoComplete="off"
@@ -2315,7 +2349,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                 <button
                   className="btn-validar-factores"
                   onClick={validarMultiplicacionFactoresDerechos}
-                  disabled={!factoresIzquierdosValidados || factoresDerechosValidados}
+                  disabled={!factoresIzquierdosValidados || factoresDerechosValidados || intentosAgotados}
                 >
                   ✓
                 </button>
@@ -2345,7 +2379,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                     setMostrarRespuesta(true);
                   }
                 }}
-                disabled={estadoValidacionTanteo !== 'correcto'}
+                disabled={estadoValidacionTanteo !== 'correcto' || intentosAgotados}
               >
                 RESULTADO
               </button>
@@ -2398,7 +2432,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
             <button
               className="btn-resolver-individual"
               onClick={() => manejarResolverIndividual('producto1')}
-              disabled={!factoresIzquierdosValidados || !factoresDerechosValidados || botonesResolverDeshabilitados}
+              disabled={!factoresIzquierdosValidados || !factoresDerechosValidados || botonesResolverDeshabilitados || intentosAgotados}
             >
               Resolver
             </button>
@@ -2429,7 +2463,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
             <button
               className="btn-resolver-individual"
               onClick={() => manejarResolverIndividual('producto2')}
-              disabled={!factoresIzquierdosValidados || !factoresDerechosValidados || botonesResolverDeshabilitados}
+              disabled={!factoresIzquierdosValidados || !factoresDerechosValidados || botonesResolverDeshabilitados || intentosAgotados}
             >
               Resolver
             </button>
@@ -2509,6 +2543,25 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
           <div className="validacion-mensaje">
             {validacionTanteo.mensaje}
           </div>
+          {intentosAgotados && !validacionTanteo.esCorrecta && (
+            <button 
+              className="btn-continuar-intentos-agotados"
+              onClick={() => cambiarSiguienteEcuacion()}
+              style={{
+                marginTop: '15px',
+                padding: '10px 20px',
+                backgroundColor: '#8B4513',
+                color: '#FFFFFF',
+                border: '2px solid #D4AF37',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: 'bold'
+              }}
+            >
+              Continuar
+            </button>
+          )}
         </div>
       )}
 
@@ -2536,13 +2589,20 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
       )}
 
 
-      {/* Quipu flotante de confirmación (estilo Reto1/2) */}
-      {mostrarRespuesta && mostrarPrimerParentesis && mostrarSegundoParentesis && (
+      </div>
+      
+      {/* Quipu flotante de confirmación (estilo Reto1/2) - FUERA del contenedor principal para estar por encima del blur */}
+      {/* Mostrar quipu cuando se acaben los intentos O cuando se complete correctamente, pero NO cuando se muestra "¡Has perdido!" */}
+      {(intentosAgotados || (mostrarRespuesta && mostrarPrimerParentesis && mostrarSegundoParentesis)) && !mostrarHasPerdido && (
         <div className="quipufactor-container">
           <div className="quipufactor-mensaje">
             <div className="mensaje-bubble">
               <p className="quipufactor-texto">
-                {coronaDesaparecidaReto3 ? (
+                {intentosAgotados ? (
+                  indiceEcuacion === ecuaciones.length - 1 
+                    ? '¡Oh no! ¡Corre!'
+                    : '¡Oh no! Vamos al siguiente'
+                ) : coronaDesaparecidaReto3 ? (
                   <>
                     ¡¡Vamos!! ¡Es la última corona y el pergamino dice: <span className="mensaje-quip">QUIP</span>!!
                   </>
@@ -2556,12 +2616,198 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
           </div>
           <div 
             className="quipufactor-personaje" 
-            onClick={enviando ? null : (() => {
-              if (coronaDesaparecidaReto3) {
-                // Si ya se mostró el código, mostrar review
-                calcularPuntuacionYMostrarReview();
+            onClick={enviando || quipuPresionado ? null : (async () => {
+              if (intentosAgotados) {
+                // Si se acabaron los intentos y es el último ejercicio
+                if (indiceEcuacion === ecuaciones.length - 1) {
+                  // Deshabilitar el quipu para evitar múltiples clicks
+                  setQuipuPresionado(true);
+                  
+                  // Primero guardar el último ejercicio con puntuación 0
+                  const preguntaNum = indiceEcuacion + 1;
+                  if (sesionJuego) {
+                    try {
+                      await apiService.guardarRespuestaReto3({
+                        sesionId: sesionJuego.id,
+                        ejercicioNumero: preguntaNum,
+                        ecuacionOriginal: ecuaciones[indiceEcuacion],
+                        validacion1: {
+                          correcta: false,
+                          intento: 0,
+                          tiempo: 0,
+                          respuesta: 'Intentos agotados'
+                        },
+                        validacion2: {
+                          correcta: false,
+                          intento: 0,
+                          tiempo: 0,
+                          respuesta: 'Intentos agotados'
+                        },
+                        validacion3: {
+                          correcta: false,
+                          intento: 0,
+                          tiempo: 0,
+                          respuesta: 'Intentos agotados'
+                        },
+                        puntuacionFinal: 0
+                      });
+                      
+                      // Agregar el ejercicio con puntuación 0 a ejerciciosCompletados
+                      const ejercicioConPuntuacionCero = {
+                        ejercicioNumero: preguntaNum,
+                        ecuacionOriginal: ecuaciones[indiceEcuacion],
+                        puntuacion: 0,
+                        validacion1: false,
+                        validacion2: false,
+                        validacion3: false
+                      };
+                      setEjerciciosCompletados(prev => {
+                        const nuevosEjercicios = prev.filter(e => e.ejercicioNumero !== preguntaNum);
+                        return [...nuevosEjercicios, ejercicioConPuntuacionCero];
+                      });
+                      
+                      // Ahora calcular victoria/derrota con todos los ejercicios incluido el último
+                      const todosLosEjercicios = [...ejerciciosCompletados.filter(e => e.ejercicioNumero !== preguntaNum), ejercicioConPuntuacionCero];
+                      const preguntasCorrectas = todosLosEjercicios.filter(e => e.puntuacion > 0).length;
+                      const preguntasIncorrectas = todosLosEjercicios.filter(e => e.puntuacion === 0).length;
+                      
+                      // Si 5 o menos preguntas fueron correctas: derrota
+                      if (preguntasCorrectas <= 5) {
+                        // Ocultar quipu y mostrar "¡Has perdido!" en el centro
+                        setMostrarRespuesta(false);
+                        setMostrarPrimerParentesis(false);
+                        setMostrarSegundoParentesis(false);
+                        setMostrarHasPerdido(true);
+                        
+                        // Guardar tiempo y actualizar sesión
+                        if (sesionJuego) {
+                          try {
+                            const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+                            const sesionData = sesionActual.data || sesionActual;
+                            const fechaInicio = new Date(sesionData.fechaInicio);
+                            const fechaFin = new Date();
+                            const tiempoTotal = Math.floor((fechaFin - fechaInicio) / 1000);
+                            
+                            await apiService.actualizarSesion(sesionJuego.id, {
+                              fecha_fin: fechaFin.toISOString(),
+                              tiempo_total: tiempoTotal,
+                              completado: true,
+                              razon_fin_juego: 'COMPLETADO'
+                            });
+                          } catch (error) {
+                            console.error('Error al actualizar sesión por pérdida:', error);
+                          }
+                        }
+                      } else {
+                        // Si más de 5 preguntas fueron correctas: victoria (mostrar corona)
+                        setMostrarCoronaReto3(true);
+                        setMostrarRespuesta(false);
+                        setMostrarPrimerParentesis(false);
+                        setMostrarSegundoParentesis(false);
+                      }
+                    } catch (error) {
+                      console.error('Error al guardar último ejercicio:', error);
+                    }
+                  }
+                } else {
+                  // Si no es el último, continuar al siguiente ejercicio
+                  cambiarSiguienteEcuacion();
+                }
+              } else if (coronaDesaparecidaReto3) {
+                // Si ya se mostró el código, mostrar review (solo una vez)
+                if (!reviewPresionado) {
+                  setReviewPresionado(true);
+                  calcularPuntuacionYMostrarReview();
+                }
               } else if (indiceEcuacion === ecuaciones.length - 1) {
-                // Si es la última pregunta y se completó, mostrar corona
+                // Si es la última pregunta y se completó, SIEMPRE guardar antes de mostrar corona
+                // (por si acaso no se guardó en cambiarSiguienteEcuacion)
+                const preguntaNum = indiceEcuacion + 1;
+                const ejercicioYaGuardado = ejerciciosCompletados.find(e => e.ejercicioNumero === preguntaNum);
+                
+                // Guardar la última pregunta si no está guardada (o forzar guardado para asegurar)
+                if (sesionJuego) {
+                  const puntuacionPregunta = puntuacionesPreguntas[preguntaNum] || 0;
+                  
+                  // Solo guardar si no está guardada para evitar duplicados
+                  if (!ejercicioYaGuardado) {
+                    // Guardar la última pregunta antes de mostrar corona
+                    (async () => {
+                    try {
+                      const tiempoValidacion1 = Math.round((Date.now() - tiempoInicioValidacion1) / 1000);
+                      const tiempoValidacion2 = Math.round((Date.now() - tiempoInicioValidacion2) / 1000);
+                      const tiempoValidacion3 = Math.round((Date.now() - tiempoInicioValidacion3) / 1000);
+                      
+                      await apiService.guardarRespuestaReto3({
+                        sesionId: sesionJuego.id,
+                        ejercicioNumero: preguntaNum,
+                        ecuacionOriginal: ecuaciones[indiceEcuacion],
+                        validacion1: {
+                          correcta: estadoValidacionIzquierda === 'correcto',
+                          intento: intentosValidacion1,
+                          tiempo: tiempoValidacion1,
+                          respuesta: 'Validación de factores izquierdos'
+                        },
+                        validacion2: {
+                          correcta: estadoValidacionDerecha === 'correcto',
+                          intento: intentosValidacion2,
+                          tiempo: tiempoValidacion2,
+                          respuesta: 'Validación de factores derechos'
+                        },
+                        validacion3: {
+                          correcta: estadoValidacionTanteo === 'correcto',
+                          intento: intentosValidacion3,
+                          tiempo: tiempoValidacion3,
+                          respuesta: 'Validación del método de tanteo'
+                        },
+                        puntuacionFinal: puntuacionPregunta
+                      });
+                      
+                      // Agregar a ejerciciosCompletados
+                      const ejercicioCompletado = {
+                        ejercicioNumero: preguntaNum,
+                        ecuacionOriginal: ecuaciones[indiceEcuacion],
+                        puntuacion: puntuacionPregunta,
+                        validacion1: estadoValidacionIzquierda === 'correcto',
+                        validacion2: estadoValidacionDerecha === 'correcto',
+                        validacion3: estadoValidacionTanteo === 'correcto'
+                      };
+                      setEjerciciosCompletados(prev => {
+                        const nuevosEjercicios = prev.filter(e => e.ejercicioNumero !== preguntaNum);
+                        return [...nuevosEjercicios, ejercicioCompletado];
+                      });
+                      
+                      // Sumar puntuación de esta pregunta a la nota final acumulada
+                      if (puntuacionPregunta > 0) {
+                        try {
+                          const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+                          const sesionData = sesionActual.data || sesionActual;
+                          const puntuacionReto3Actual = sesionData.puntuacionReto3 || 0;
+                          const nuevaPuntuacionReto3 = puntuacionReto3Actual + puntuacionPregunta;
+                          const puntuacionReto1 = sesionData.puntuacionReto1 || 0;
+                          const puntuacionReto2 = sesionData.puntuacionReto2 || 0;
+                          const notaFinalAcumulada = puntuacionReto1 + puntuacionReto2 + nuevaPuntuacionReto3;
+                          const notaJuego = Math.round(notaFinalAcumulada / 10);
+                          
+                          await apiService.actualizarSesion(sesionJuego.id, {
+                            puntuacionReto3: nuevaPuntuacionReto3,
+                            puntuacionTotal: notaFinalAcumulada,
+                            puntuacionNotas: notaJuego
+                          });
+                        } catch (error) {
+                          console.error('Error al actualizar sesión con puntuación:', error);
+                        }
+                      }
+                      
+                      console.log(`✅ Última pregunta ${preguntaNum} guardada antes de mostrar corona. Puntuación: ${puntuacionPregunta}/7`);
+                    } catch (error) {
+                      console.error('Error al guardar última pregunta:', error);
+                    }
+                  })();
+                  }
+                }
+                
+                // Mostrar corona (incluso si ya estaba guardada)
                 setMostrarCoronaReto3(true);
                 setMostrarRespuesta(false);
                 setMostrarPrimerParentesis(false);
@@ -2570,26 +2816,26 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
                 // Continuar con siguiente pregunta
                 cambiarSiguienteEcuacion();
               }
-            })} 
-            title={enviando ? 'Guardando...' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Siguiente Ecuación'))}
+            })}
+            title={enviando || quipuPresionado || reviewPresionado ? 'Guardando...' : (intentosAgotados ? 'Continuar al siguiente ejercicio' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Siguiente Ecuación')))}
             style={{
-              opacity: enviando ? 0.6 : 1,
-              cursor: enviando ? 'not-allowed' : 'pointer'
+              opacity: (enviando || quipuPresionado || reviewPresionado) ? 0.6 : 1,
+              cursor: (enviando || quipuPresionado || reviewPresionado) ? 'not-allowed' : 'pointer'
             }}
           >
             <img 
-              src={require(`../assets/img/${coronaDesaparecidaReto3 ? 'niñoorgulloso.png' : 'niñofeliz.png'}`)} 
-              alt={coronaDesaparecidaReto3 ? "Niño orgulloso" : "Quipu feliz"} 
+              src={require(`../assets/img/${intentosAgotados ? 'niñoasombrado.png' : (coronaDesaparecidaReto3 ? 'niñoorgulloso.png' : 'niñofeliz.png')}`)} 
+              alt={intentosAgotados ? "Niño asombrado" : (coronaDesaparecidaReto3 ? "Niño orgulloso" : "Quipu feliz")} 
               className="quipufactor-img"
             />
-            <div className="quipufactor-texto-cta">
-              {enviando ? '⏳ Guardando...' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Presióname'))}
-            </div>
+            {!intentosAgotados && (
+              <div className="quipufactor-texto-cta">
+                {enviando ? '⏳ Guardando...' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Presióname'))}
+              </div>
+            )}
           </div>
         </div>
       )}
-
-      </div>
       
       {/* Corona y pergamino del Reto 3 - Fuera del contenedor principal */}
       {mostrarCoronaReto3 && (
@@ -2620,7 +2866,19 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego })
           onContinuar={handleContinuarReview}
         />
       )}
+      
     </div>
+    
+    {/* Mensaje "¡Has perdido!" cuando se pierde en el último ejercicio - FUERA del contenedor principal para estar por encima del blur */}
+    {mostrarHasPerdido && (
+      <div className="mensaje-perdido-reto3">
+        <h1>¡Has perdido!!</h1>
+        <button className="btn-volver-inicio-reto3" onClick={() => window.location.reload()}>
+          <span className="btn-texto">Volver al inicio</span>
+        </button>
+      </div>
+    )}
+    </>
   );
 };
 
