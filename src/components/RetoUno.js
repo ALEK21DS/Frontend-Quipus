@@ -221,10 +221,10 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
             }));
           } else if (mensajeActual === 1) {
             // Mostrar la corona después del segundo mensaje
-            setMostrarCorona(true);
+          setMostrarCorona(true);
             setQuipuActivado(false);
-          }
-        } else {
+        }
+      } else {
           // Secuencia de derrota: "Encontre esto. ¡Salgamos de aquí" → corona
           if (mensajeActual === 0) {
             setMostrarCorona(true);
@@ -739,16 +739,16 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
           {validacion.mostrada && (
             <div className="quipuretouno-mensaje">
               <div className="mensaje-bubble">
-                <p>
-                  {validacion.mensajeError
-                    ? validacion.mensajeError
+                  <p>
+                    {validacion.mensajeError
+                      ? validacion.mensajeError
                     : preguntaActual === 4 && validacion.mostrada && validacion.mensaje
                     ? validacion.mensaje
-                    : validacion.esCorrecta 
-                    ? "¡Sí, lo logramos, vamos a la siguiente!" 
+                      : validacion.esCorrecta 
+                      ? "¡Sí, lo logramos, vamos a la siguiente!" 
                     : "¡No, nos equivocamos!"
-                  }
-                </p>
+                    }
+                  </p>
                 <div className="bubble-arrow"></div>
               </div>
             </div>

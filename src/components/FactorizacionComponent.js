@@ -678,7 +678,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
 
   const calcularPuntuacionYMostrarReview = async () => {
     // La puntuación ya se ha ido sumando pregunta por pregunta
-    // Solo necesitamos obtener la puntuación final de la sesión
+    // Solo necesitamos obtener la puntuación final de la sesión y guardar el tiempo total
     if (sesionJuego) {
       try {
         const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
@@ -687,7 +687,23 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
         const notaFinalAcumulada = sesionData.puntuacionTotal || 0;
         const notaJuego = sesionData.puntuacionNotas || 0;
         
-        console.log(`✅ Reto 3 completado. Puntuación: ${puntuacionReto3}/70. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
+        // Calcular tiempo total desde fechaInicio hasta ahora
+        let tiempoTotal = 0;
+        if (sesionData.fechaInicio) {
+          const fechaInicio = new Date(sesionData.fechaInicio);
+          const fechaFin = new Date();
+          tiempoTotal = Math.floor((fechaFin - fechaInicio) / 1000);
+        }
+        
+        // Actualizar sesión con tiempo total y completado
+        await apiService.actualizarSesion(sesionJuego.id, {
+          fecha_fin: new Date().toISOString(),
+          tiempo_total: tiempoTotal,
+          completado: true,
+          razon_fin_juego: 'COMPLETADO'
+        });
+        
+        console.log(`✅ Reto 3 completado. Tiempo total: ${tiempoTotal}s. Puntuación: ${puntuacionReto3}/70. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
       } catch (error) {
         console.error('❌ Error al obtener sesión:', error);
       }
@@ -2600,7 +2616,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
               <p className="quipufactor-texto">
                 {intentosAgotados ? (
                   indiceEcuacion === ecuaciones.length - 1 
-                    ? '¡Oh no! ¡Corre!'
+                    ? '¡Oh no! ¡Corre !'
                     : '¡Oh no! Vamos al siguiente'
                 ) : coronaDesaparecidaReto3 ? (
                   <>
@@ -2829,9 +2845,9 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
               className="quipufactor-img"
             />
             {!intentosAgotados && (
-              <div className="quipufactor-texto-cta">
+            <div className="quipufactor-texto-cta">
                 {enviando ? '⏳ Guardando...' : (coronaDesaparecidaReto3 ? 'Ver Review' : (indiceEcuacion === ecuaciones.length - 1 ? 'Ver Corona' : 'Presióname'))}
-              </div>
+            </div>
             )}
           </div>
         </div>

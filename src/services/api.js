@@ -8,9 +8,11 @@ class ApiService {
     console.log('🌐 API conectada a:', this.baseURL);
   }
 
-  // Método genérico para hacer peticiones HTTP
+  // Método genérico para hacer peticiones HTTP con timeout
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+    const timeout = options.timeout || 30000; // 30 segundos por defecto
+    
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -19,14 +21,35 @@ class ApiService {
       ...options,
     };
 
-    const response = await fetch(url, config);
+    // Crear un AbortController para el timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout);
     
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-    }
+    try {
+      const response = await fetch(url, {
+        ...config,
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
 
-    return await response.json();
+      return await response.json();
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      // Si es un error de timeout o abort
+      if (error.name === 'AbortError') {
+        throw new Error('La petición tardó demasiado. Por favor, intenta nuevamente.');
+      }
+      
+      // Re-lanzar otros errores
+      throw error;
+    }
   }
 
 

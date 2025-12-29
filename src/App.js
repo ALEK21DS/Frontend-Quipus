@@ -112,14 +112,28 @@ function App() {
   const handleSalirRuinas = async () => {
     setJuegoCompletado(true); // Marcar que el juego fue completado
     
-    // Actualizar sesión de juego en el backend
+    // Calcular tiempo total y actualizar sesión de juego en el backend
     if (sesionJuego) {
       try {
+        // Obtener sesión para calcular tiempo total
+        const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+        const sesionData = sesionActual.data || sesionActual;
+        let tiempoTotal = 0;
+        
+        // Calcular tiempo total desde fechaInicio hasta ahora
+        if (sesionData.fechaInicio) {
+          const fechaInicio = new Date(sesionData.fechaInicio);
+          const fechaFin = new Date();
+          tiempoTotal = Math.floor((fechaFin - fechaInicio) / 1000);
+        }
+        
         await apiService.actualizarSesion(sesionJuego.id, {
           fecha_fin: new Date().toISOString(),
+          tiempo_total: tiempoTotal,
           completado: true,
           razon_fin_juego: 'COMPLETADO'
         });
+        console.log(`✅ Juego completado. Tiempo total: ${tiempoTotal}s`);
       } catch (error) {
         console.error('Error al actualizar sesión:', error);
       }
@@ -185,13 +199,21 @@ function App() {
     // Solo ocultar el reloj
     setMostrarReloj(false);
     
-    // Obtener nota final acumulada antes de actualizar la sesión
+    // Obtener nota final acumulada y calcular tiempo total antes de actualizar la sesión
     let notaFinalAcumulada = 0;
+    let tiempoTotal = 0;
     if (sesionJuego) {
       try {
         const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
         const sesionData = sesionActual.data || sesionActual;
         notaFinalAcumulada = sesionData.puntuacionTotal || 0;
+        
+        // Calcular tiempo total desde fechaInicio hasta ahora
+        if (sesionData.fechaInicio) {
+          const fechaInicio = new Date(sesionData.fechaInicio);
+          const fechaFin = new Date();
+          tiempoTotal = Math.floor((fechaFin - fechaInicio) / 1000);
+        }
       } catch (error) {
         console.error('Error al obtener sesión para calcular nota final:', error);
       }
@@ -205,12 +227,13 @@ function App() {
       try {
         await apiService.actualizarSesion(sesionJuego.id, {
           fecha_fin: new Date().toISOString(),
+          tiempo_total: tiempoTotal,
           tiempo_agotado: true,
           razon_fin_juego: 'TIEMPO_AGOTADO',
           puntuacionTotal: notaFinalAcumulada,
           puntuacionNotas: notaJuego
         });
-        console.log(`✅ Tiempo agotado. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
+        console.log(`✅ Tiempo agotado. Tiempo total: ${tiempoTotal}s. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
       } catch (error) {
         console.error('Error al actualizar sesión por tiempo agotado:', error);
       }

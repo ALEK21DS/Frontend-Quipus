@@ -24,12 +24,19 @@ const NotasComponent = ({ onVolver }) => {
         if (response.success && response.data) {
           // Transformar los datos para el formato esperado por el componente
           const notasTransformadas = response.data.map(nota => {
-            // Calcular tiempo basado explícitamente en el estado de completado
+            // Calcular tiempo basado en tres estados posibles:
+            // 1. Tiempo agotado (tiempoAgotado === true)
+            // 2. Tiempo de juego (completado === true)
+            // 3. No termino (completado === false)
             let tiempo;
             
             if (nota.sesion) {
-              // Si completado === true, SIEMPRE mostrar el tiempo de juego
-              if (Boolean(nota.sesion.completado) === true) {
+              // Prioridad 1: Si se agotó el tiempo, mostrar "Tiempo agotado"
+              if (Boolean(nota.sesion.tiempoAgotado) === true) {
+                tiempo = 'Tiempo agotado';
+              }
+              // Prioridad 2: Si completado === true, mostrar el tiempo de juego
+              else if (Boolean(nota.sesion.completado) === true) {
                 // Prioridad 1: Usar tiempoTotal si está disponible
                 if (nota.sesion.tiempoTotal !== null && nota.sesion.tiempoTotal !== undefined && nota.sesion.tiempoTotal > 0) {
                   const minutos = Math.floor(nota.sesion.tiempoTotal / 60);
@@ -52,12 +59,12 @@ const NotasComponent = ({ onVolver }) => {
                   tiempo = '00:00';
                 }
               } 
-              // Si completado === false, mostrar "No ha terminado"
+              // Prioridad 3: Si completado === false, mostrar "No termino"
               else {
                 tiempo = 'No termino';
               }
             } else {
-              // Si no hay sesión, mostrar "No ha terminado"
+              // Si no hay sesión, mostrar "No termino"
               tiempo = 'No termino';
             }
             

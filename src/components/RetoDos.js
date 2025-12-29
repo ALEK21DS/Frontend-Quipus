@@ -217,9 +217,9 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
       setQuipuMensaje('¡No, salgamos de aquí rapido!');
     }
     
-    setQuipuActivado(true);
-    setMostrarMensaje(true);
-    setPaginaDesactivada(true);
+      setQuipuActivado(true);
+      setMostrarMensaje(true);
+      setPaginaDesactivada(true);
   };
 
   const handleQuipuClick = () => {
@@ -250,7 +250,7 @@ const RetoDos = ({ datosUsuario, onVolverCentroControl, sesionJuego }) => {
 
   const handleContinuarReview = () => {
     setMostrarReviewModal(false);
-    if (onVolverCentroControl) {
+      if (onVolverCentroControl) {
       onVolverCentroControl(2); // Volver al centro de control marcando el reto 2 como completado
     }
   };
