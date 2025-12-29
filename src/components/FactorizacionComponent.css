@@ -51,9 +51,19 @@
 }
 
 /* Efecto borroso del fondo cuando aparece la corona del Reto 3 */
-.factorizacion-page.blur-background > *:not(.corona-container-reto3):not(.instruccion-corona-reto3) {
+.factorizacion-page.blur-background {
+  position: relative;
+}
+
+.factorizacion-page.blur-background > *:not(.corona-container-reto3):not(.instruccion-corona-reto3):not(.quipufactor-container):not(.validacion-resultado) {
   filter: blur(5px);
   transition: filter 0.3s ease;
+  pointer-events: none; /* Bloquear interacciones con elementos borrosos */
+}
+
+.factorizacion-page.blur-background .quipufactor-container {
+  filter: none !important; /* Asegurar que el quipu no tenga blur */
+  pointer-events: auto !important; /* Asegurar que el quipu sea clickeable */
 }
 
 .pergamino-img-reto3 {
@@ -1960,7 +1970,8 @@
   min-width: 350px;
   animation: slideInRight 0.5s ease-out;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
+  z-index: 10002; /* Por encima del blur y del quipu */
+  pointer-events: auto; /* Asegurar que sea clickeable */
 }
 
 /* Contenedor del niño - posicionado encima del cuadro */
@@ -3264,10 +3275,12 @@
   position: fixed;
   bottom: 30px;
   right: 30px;
-  z-index: 1200;
+  z-index: 10000; /* Por encima del blur, igual que el reloj (9999) pero más alto */
   display: flex;
   flex-direction: column;
   align-items: center;
+  pointer-events: auto; /* Asegurar que sea clickeable */
+  isolation: isolate; /* Crear nuevo contexto de apilamiento */
 }
 
 .quipufactor-mensaje {
@@ -3275,7 +3288,7 @@
   bottom: 220px;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1201;
+  z-index: 10001; /* Por encima del contenedor del quipu */
 }
 
 .quipufactor-personaje {
@@ -3760,6 +3773,82 @@
   .btn-modal {
     padding: 8px 12px;
     font-size: 0.8rem;
+  }
+}
+
+/* Mensaje "¡Has perdido!" para Reto 3 */
+.mensaje-perdido-reto3 {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100001; /* Por encima de todo */
+  text-align: center;
+  animation: mensajePerdidoAparece 0.8s ease-out;
+}
+
+.mensaje-perdido-reto3 h1 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 4rem;
+  font-weight: 700;
+  color: #DC143C;
+  text-shadow: 
+    3px 3px 6px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(220, 20, 60, 0.6);
+  margin: 0 0 30px 0;
+  line-height: 1.2;
+  animation: mensajePerdidoPulso 2s ease-in-out infinite;
+}
+
+.btn-volver-inicio-reto3 {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  border: 3px solid #28a745;
+  border-radius: 50px;
+  padding: 20px 30px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  box-shadow: 
+    0 10px 30px rgba(40, 167, 69, 0.5),
+    0 5px 15px rgba(40, 167, 69, 0.3),
+    inset 0 1px 2px rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-volver-inicio-reto3:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 
+    0 15px 35px rgba(40, 167, 69, 0.6),
+    0 8px 15px rgba(40, 167, 69, 0.4),
+    inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.btn-volver-inicio-reto3 .btn-texto {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes mensajePerdidoAparece {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes mensajePerdidoPulso {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
   }
 }
 

@@ -1,0 +1,129 @@
+.review-reto2-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  padding: 20px;
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.review-reto2-modal {
+  background: linear-gradient(135deg, #8B4513 0%, #654321 100%);
+  border-radius: 16px;
+  max-width: 900px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(139, 69, 19, 0.8);
+}
+
+.review-reto2-modal-header {
+  padding: 20px;
+  border-bottom: 2px solid rgba(83, 37, 4, 0.8);
+  text-align: center;
+}
+
+.review-reto2-modal-header h2 {
+  color: #D4AF37;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 2rem;
+  margin: 0;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.review-reto2-modal-content {
+  padding: 30px;
+}
+
+.review-reto2-parrafo {
+  color: #F5E6D3;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  text-align: justify;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  background: rgba(139, 69, 19, 0.2);
+  padding: 20px;
+  border-radius: 8px;
+  line-height: 1.5;
+  border: 1px solid rgba(139, 69, 19, 0.4);
+}
+
+/* Contenedor del blank inline */
+.review-blank-container {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 4px;
+  min-width: 120px;
+}
+
+/* Línea 1: Respuesta del usuario */
+.review-blank-line1 {
+  display: block;
+  font-weight: bold;
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.review-blank-correct {
+  color: #4CAF50;
+  background-color: rgba(76, 175, 80, 0.2);
+}
+
+.review-blank-incorrect {
+  color: #f44336;
+  background-color: rgba(244, 67, 54, 0.2);
+}
+
+/* Línea 2: Respuesta correcta */
+.review-blank-line2 {
+  display: block;
+  font-size: 0.85rem;
+  color: #D4AF37;
+  font-style: italic;
+  padding: 2px 8px;
+  opacity: 0.9;
+}
+
+.review-reto2-modal-footer {
+  padding: 20px;
+  border-top: 2px solid rgba(83, 37, 4, 0.8);
+  display: flex;
+  justify-content: center;
+}
+
+.review-reto2-btn-continuar {
+    background: linear-gradient(135deg, #CD853F 0%, #8B4513 100%);
+    color: #FFFFFF;
+    border: 2px solid rgba(212, 175, 55, 0.5);
+    border-radius: 8px;
+    padding: 12px 30px;
+    font-family: 'Cinzel', 'Times New Roman', serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+.review-reto2-btn-continuar:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(135deg, #8B4513 0%, #CD853F 100%);
+    border-color: rgba(212, 175, 55, 0.8);
+  }
+
+.review-reto2-btn-continuar:active {
+  transform: translateY(0);
+}
+

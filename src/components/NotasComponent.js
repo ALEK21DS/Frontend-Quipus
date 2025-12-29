@@ -23,14 +23,61 @@ const NotasComponent = ({ onVolver }) => {
         
         if (response.success && response.data) {
           // Transformar los datos para el formato esperado por el componente
-          const notasTransformadas = response.data.map(nota => ({
-            id: nota.id,
-            nombre: nota.usuario.nombre,
-            apellido: nota.usuario.apellido,
-            curso: nota.usuario.curso || '-',
-            edad: nota.usuario.edad !== undefined && nota.usuario.edad !== null ? nota.usuario.edad : '-',
-            nota: nota.calificacion !== undefined && nota.calificacion !== null ? nota.calificacion.toFixed(1) : '0.0'
-          }));
+          const notasTransformadas = response.data.map(nota => {
+            // Calcular tiempo basado en tres estados posibles:
+            // 1. Tiempo agotado (tiempoAgotado === true)
+            // 2. Tiempo de juego (completado === true)
+            // 3. No termino (completado === false)
+            let tiempo;
+            
+            if (nota.sesion) {
+              // Prioridad 1: Si se agotó el tiempo, mostrar "Tiempo agotado"
+              if (Boolean(nota.sesion.tiempoAgotado) === true) {
+                tiempo = 'Tiempo agotado';
+              }
+              // Prioridad 2: Si completado === true, mostrar el tiempo de juego
+              else if (Boolean(nota.sesion.completado) === true) {
+                // Prioridad 1: Usar tiempoTotal si está disponible
+                if (nota.sesion.tiempoTotal !== null && nota.sesion.tiempoTotal !== undefined && nota.sesion.tiempoTotal > 0) {
+                  const minutos = Math.floor(nota.sesion.tiempoTotal / 60);
+                  const segundos = nota.sesion.tiempoTotal % 60;
+                  tiempo = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+                } 
+                // Prioridad 2: Calcular desde fechas si no hay tiempoTotal
+                else if (nota.sesion.fechaInicio && nota.sesion.fechaFin) {
+                  const fechaInicio = new Date(nota.sesion.fechaInicio);
+                  const fechaFin = new Date(nota.sesion.fechaFin);
+                  const tiempoTotal = Math.floor((fechaFin - fechaInicio) / 1000);
+                  if (tiempoTotal > 0) {
+                    const minutos = Math.floor(tiempoTotal / 60);
+                    const segundos = tiempoTotal % 60;
+                    tiempo = `${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')}`;
+                  } else {
+                    tiempo = '00:00';
+                  }
+                } else {
+                  tiempo = '00:00';
+                }
+              } 
+              // Prioridad 3: Si completado === false, mostrar "No termino"
+              else {
+                tiempo = 'No termino';
+              }
+            } else {
+              // Si no hay sesión, mostrar "No termino"
+              tiempo = 'No termino';
+            }
+            
+            return {
+              id: nota.id,
+              nombre: nota.usuario.nombre,
+              apellido: nota.usuario.apellido,
+              curso: nota.usuario.curso || '-',
+              edad: nota.usuario.edad !== undefined && nota.usuario.edad !== null ? nota.usuario.edad : '-',
+              nota: nota.calificacion !== undefined && nota.calificacion !== null ? nota.calificacion.toFixed(1) : '0.0',
+              tiempo: tiempo
+            };
+          });
           setDatosNotas(notasTransformadas);
         }
       } catch (err) {
@@ -170,6 +217,7 @@ const NotasComponent = ({ onVolver }) => {
                 <th>Curso</th>
                 <th>Edad</th>
                 <th>Nota</th>
+                <th>Tiempo</th>
               </tr>
             </thead>
             <tbody>
@@ -182,11 +230,12 @@ const NotasComponent = ({ onVolver }) => {
                   <td className={`nota-cell ${estudiante.nota >= 9 ? 'nota-excelente' : estudiante.nota >= 8 ? 'nota-buena' : estudiante.nota >= 7 ? 'nota-regular' : 'nota-baja'}`}>
                     {estudiante.nota}
                   </td>
+                  <td>{estudiante.tiempo}</td>
                 </tr>
               ))}
               {datosFiltrados.length === 0 && (
                 <tr>
-                  <td colSpan="5" className="sin-resultados">
+                  <td colSpan="6" className="sin-resultados">
                     No se encontraron estudiantes con los filtros aplicados
                   </td>
                 </tr>

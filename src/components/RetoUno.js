@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './RetoUno.css';
 import apiService from '../services/api';
+import ReviewReto1Modal from './ReviewReto1Modal';
+import { PUNTOS_POR_PREGUNTA_RETO_1 } from '../constants/puntuacion';
 
 const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
   const [preguntaActual, setPreguntaActual] = useState(1);
@@ -16,6 +18,10 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
   const [coronaPresionada, setCoronaPresionada] = useState(false);
   const [enviando, setEnviando] = useState(false);  // Estado de carga
   const [tiempoInicio, setTiempoInicio] = useState(Date.now());  // Para rastrear tiempo de respuesta
+  const [respuestasGuardadas, setRespuestasGuardadas] = useState([]); // Guardar todas las respuestas
+  const [mostrarReviewModal, setMostrarReviewModal] = useState(false); // Modal de review
+  const [mensajeActual, setMensajeActual] = useState(0); // Para controlar la secuencia de mensajes
+  const [esVictoria, setEsVictoria] = useState(false); // Para saber si es victoria o derrota
 
   // Inicializar tiempo cuando se monta el componente
   useEffect(() => {
@@ -104,24 +110,60 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
       esCorrecta = respuestaSeleccionada === 'operadores';
     }
     
-    setValidacion({
-      mostrada: true,
-      esCorrecta: esCorrecta
-    });
-
-    // Guardar respuesta en el backend
+    // Guardar respuesta en el backend y en el estado local PRIMERO
     if (sesionJuego && respuestaUsuarioLetra) {
       try {
         // Calcular tiempo real de respuesta en segundos
         const tiempoReal = tiempoInicio ? Math.round((Date.now() - tiempoInicio) / 1000) : 10;
         
-        await apiService.guardarRespuestaReto1({
+        const respuestaData = {
           sesionId: sesionJuego.id,
           preguntaNumero: preguntaActual,
           respuestaCorrecta: respuestaCorrectaLetra,
           respuestaUsuario: respuestaUsuarioLetra,
-          tiempoRespuesta: tiempoReal
+          tiempoRespuesta: tiempoReal,
+          esCorrecta: esCorrecta // Agregar esCorrecta al objeto
+        };
+        
+        await apiService.guardarRespuestaReto1(respuestaData);
+        
+        // Si es la pregunta 4, calcular victoria/derrota ANTES de actualizar el estado
+        if (preguntaActual === 4) {
+          // Calcular respuestas correctas: usar respuestasGuardadas anteriores + la actual
+          const todasLasRespuestas = [...respuestasGuardadas.filter(r => r.preguntaNumero !== preguntaActual), respuestaData];
+          const respuestasCorrectas = todasLasRespuestas.filter(r => r.esCorrecta === true).length;
+          // Victoria: 3 o más respuestas correctas (3 o 4)
+          const esVictoria = respuestasCorrectas >= 3;
+          
+          console.log(`📊 Reto 1 - Respuestas correctas: ${respuestasCorrectas}/4, Victoria: ${esVictoria}`);
+          console.log(`📊 Respuestas:`, todasLasRespuestas.map(r => `P${r.preguntaNumero}: ${r.esCorrecta ? '✓' : '✗'}`));
+          
+          // Establecer mensaje apropiado directamente
+          setValidacion({
+            mostrada: true,
+            esCorrecta: esCorrecta,
+            mensaje: esVictoria 
+              ? "¡Se abrió la puerta, vamos al siguiente reto!"
+              : "Encontre esto. ¡Salgamos de aquí"
+          });
+          
+          setEsVictoria(esVictoria);
+          setMostrarMensaje(true);
+          setMensajeActual(0);
+        } else {
+          // Si NO es la pregunta 4, establecer validación normal
+          setValidacion({
+            mostrada: true,
+            esCorrecta: esCorrecta
+          });
+        }
+        
+        // Guardar respuesta en el estado local para el review (después de calcular)
+        setRespuestasGuardadas(prev => {
+          const nuevasRespuestas = prev.filter(r => r.preguntaNumero !== preguntaActual);
+          return [...nuevasRespuestas, respuestaData];
         });
+        
         console.log(`✅ Respuesta ${preguntaActual} guardada en el backend (Correcta: ${respuestaCorrectaLetra}, Usuario: ${respuestaUsuarioLetra}, Es correcta: ${esCorrecta})`);
       } catch (error) {
         console.error('❌ Error al guardar respuesta:', error);
@@ -138,9 +180,11 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
   };
 
   const handleCoronaClick = () => {
-    // Hacer desaparecer la corona y pergamino, mostrar el mensaje final
+    // Hacer desaparecer la corona y pergamino
     setMostrarCorona(false);
     setCoronaPresionada(true);
+    // Calcular puntuación y mostrar review (enviar nota al backend)
+    calcularPuntuacionYMostrarReview();
   };
 
   const handleQuipuClick = () => {
@@ -155,43 +199,93 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
       return;
     }
 
-    // Si la respuesta es incorrecta, reiniciar el ejercicio
-    if (validacion.mostrada && !validacion.esCorrecta && !validacion.mensajeFinal) {
-      setValidacion({
-        mostrada: false,
-        esCorrecta: null,
-        mensajeError: null
-      });
-      setRespuestaSeleccionada('');
-      setQuipuActivado(false);
-      return;
-    }
-
+    // NUEVA LÓGICA: Permitir avanzar siempre que se haya seleccionado una respuesta
+    // No se bloquea por respuestas incorrectas
     if (preguntaActual < 4) {
       // Avanzar a la siguiente pregunta (el useEffect limpiará el estado)
+      setQuipuActivado(false);
       setPreguntaActual(preguntaActual + 1);
     } else {
-      // Si es la pregunta 4 (última), mostrar mensaje final y regresar al centro de control
-      if (mostrarMensaje) {
-        if (coronaPresionada) {
-          // Si ya se presionó la corona, regresar al centro de control con reto completado
-          onVolver(1);
-        } else {
-          // Mostrar la corona después del mensaje final
+      // Si es la pregunta 4 (última), el mensaje ya se estableció en handleEnviar
+      // Solo avanzar en la secuencia de mensajes
+      if (mostrarMensaje && validacion.mensaje) {
+        // Avanzar al siguiente mensaje en la secuencia
+        if (esVictoria) {
+          // Secuencia de victoria: "¡Se abrió la puerta..." → "¡Espera! ¿Qué es esto?..." → corona
+          if (mensajeActual === 0) {
+            setMensajeActual(1);
+            setValidacion(prev => ({
+              ...prev,
+              mensaje: "¡Espera! ¿Qué es esto? ¡Hay algo que brilla!",
+              mensajeFinal: false
+            }));
+          } else if (mensajeActual === 1) {
+            // Mostrar la corona después del segundo mensaje
           setMostrarCorona(true);
+            setQuipuActivado(false);
         }
       } else {
-        // Mostrar mensaje final
-        setMostrarMensaje(true);
-        // Cambiar el mensaje después de un breve delay
-        setTimeout(() => {
-          setValidacion(prev => ({
-            ...prev,
-            mensajeFinal: true
-          }));
-        }, 300);
+          // Secuencia de derrota: "Encontre esto. ¡Salgamos de aquí" → corona
+          if (mensajeActual === 0) {
+            setMostrarCorona(true);
+            setQuipuActivado(false);
+          }
+        }
       }
     }
+  };
+
+  const calcularPuntuacionYMostrarReview = async () => {
+    // Calcular puntuación del reto 1
+    let puntuacionReto1 = 0;
+    respuestasGuardadas.forEach(respuesta => {
+      if (respuesta.respuestaUsuario === respuesta.respuestaCorrecta) {
+        puntuacionReto1 += PUNTOS_POR_PREGUNTA_RETO_1;
+      }
+    });
+
+    // Obtener puntuación actual de la sesión para calcular la nota final acumulada
+    let notaFinalAcumulada = puntuacionReto1; // Iniciar con la puntuación del reto 1
+    if (sesionJuego) {
+      try {
+        const sesionActual = await apiService.obtenerSesion(sesionJuego.id);
+        const sesionData = sesionActual.data || sesionActual;
+        // Sumar puntuaciones de otros retos (reto 2 y reto 3) si existen
+        const puntuacionReto2 = sesionData.puntuacionReto2 || 0;
+        const puntuacionReto3 = sesionData.puntuacionReto3 || 0;
+        notaFinalAcumulada = puntuacionReto1 + puntuacionReto2 + puntuacionReto3;
+      } catch (error) {
+        console.error('Error al obtener sesión:', error);
+        // Si hay error, usar solo la puntuación del reto 1
+        notaFinalAcumulada = puntuacionReto1;
+      }
+    }
+
+    // Calcular nota del juego (0-10): puntuación total dividida entre 10
+    const notaJuego = Math.round(notaFinalAcumulada / 10); // Redondear a entero (0-10)
+
+    // Actualizar sesión en el backend con la nota final acumulada
+    if (sesionJuego) {
+      try {
+        await apiService.actualizarSesion(sesionJuego.id, {
+          puntuacionReto1: puntuacionReto1,
+          puntuacionTotal: notaFinalAcumulada,
+          puntuacionNotas: notaJuego
+        });
+        console.log(`✅ Reto 1 completado. Puntuación: ${puntuacionReto1}/10. Nota final acumulada: ${notaFinalAcumulada}/100. Nota del juego: ${notaJuego}/10`);
+      } catch (error) {
+        console.error('❌ Error al actualizar sesión:', error);
+      }
+    }
+
+    // Ocultar quipu y mostrar modal de review
+    setQuipuActivado(false);
+    setMostrarReviewModal(true);
+  };
+
+  const handleContinuarReview = () => {
+    setMostrarReviewModal(false);
+    onVolver(1); // Volver al centro de control
   };
 
   const renderOpciones = () => {
@@ -645,25 +739,16 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
           {validacion.mostrada && (
             <div className="quipuretouno-mensaje">
               <div className="mensaje-bubble">
-                {coronaPresionada ? (
-                  <>
-                    <p>¡Es una corona! Y viene con un papel. ¡Dice:</p>
-                    <p className="mensaje-as">AS</p>
-                  </>
-                ) : (
                   <p>
                     {validacion.mensajeError
                       ? validacion.mensajeError
-                      : preguntaActual === 4 && validacion.esCorrecta && validacion.mensajeFinal
-                      ? "¡Espera! ¿Qué es esto? ¡Hay algo que brilla!"
-                      : preguntaActual === 4 && validacion.esCorrecta
-                      ? "¡Se abrió la puerta, vamos al siguiente reto!"
+                    : preguntaActual === 4 && validacion.mostrada && validacion.mensaje
+                    ? validacion.mensaje
                       : validacion.esCorrecta 
                       ? "¡Sí, lo logramos, vamos a la siguiente!" 
-                      : "¡No, nos equivocamos! Corrígelo"
+                    : "¡No, nos equivocamos!"
                     }
                   </p>
-                )}
                 <div className="bubble-arrow"></div>
               </div>
             </div>
@@ -671,16 +756,12 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
           
           <div className="quipuretouno-personaje" onClick={handleQuipuClick}>
             <img 
-              src={require(`../assets/img/${coronaPresionada ? 'niñoestudio.png' : preguntaActual === 4 && validacion.mostrada && validacion.esCorrecta && validacion.mensajeFinal ? 'niñopensando2.png' : validacion.mensajeError ? 'niñocautela.png' : validacion.esCorrecta ? 'niñofeliz.png' : 'niñoasombrado.png'}`)} 
+              src={require(`../assets/img/${coronaPresionada ? 'niñoestudio.png' : preguntaActual === 4 && validacion.mostrada && validacion.mensaje && validacion.mensaje.includes('Espera') ? 'niñopensando2.png' : preguntaActual === 4 && validacion.mostrada && esVictoria ? 'niñofeliz.png' : preguntaActual === 4 && validacion.mostrada && !esVictoria ? 'niñoasombrado.png' : validacion.mensajeError ? 'niñocautela.png' : validacion.esCorrecta ? 'niñofeliz.png' : 'niñoasombrado.png'}`)} 
               alt="Quipu" 
               className="quipuretouno-img"
             />
             <div className="quipuretouno-texto">
-              {coronaPresionada
-                ? "Finalizar"
-                : preguntaActual === 4 && validacion.mostrada && validacion.esCorrecta && validacion.mensajeFinal
-                ? "Continuar"
-                : preguntaActual === 4 && validacion.mostrada && validacion.esCorrecta
+              {preguntaActual === 4 && validacion.mostrada
                 ? "Continuar"
                 : "Presióname"
               }
@@ -711,6 +792,14 @@ const RetoUno = ({ onVolver, datosUsuario, sesionJuego }) => {
         <div className="instruccion-corona">
           <p>Presiona la corona</p>
         </div>
+      )}
+
+      {/* Modal de Review */}
+      {mostrarReviewModal && (
+        <ReviewReto1Modal 
+          respuestas={respuestasGuardadas}
+          onContinuar={handleContinuarReview}
+        />
       )}
     </div>
   );

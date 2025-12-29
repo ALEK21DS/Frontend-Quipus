@@ -8,7 +8,7 @@ const QuipoTiempoAgotado = ({ onVolverInicio }) => {
   const [mostrarPerdido, setMostrarPerdido] = useState(false);
 
   const mensajes = [
-    "¡Oh no, se nos acabó el tiempo, nos quedamos encerrados!"
+    "¡Se acabó el tiempo!"
   ];
 
   const handleQuipoClick = () => {
