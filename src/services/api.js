@@ -147,9 +147,25 @@ class ApiService {
     });
   }
 
-  // Obtener todas las notas
-  async obtenerTodasNotas() {
-    return this.request('/notas');
+  // Obtener todas las notas con paginación y filtros
+  async obtenerTodasNotas(limite = 50, offset = 0, curso = null, nombre = null, apellido = null, edad = null) {
+    const params = new URLSearchParams({
+      limite: limite.toString(),
+      offset: offset.toString()
+    });
+    if (curso) {
+      params.append('curso', curso);
+    }
+    if (nombre) {
+      params.append('nombre', nombre);
+    }
+    if (apellido) {
+      params.append('apellido', apellido);
+    }
+    if (edad) {
+      params.append('edad', edad);
+    }
+    return this.request(`/notas?${params.toString()}`);
   }
 
   // Obtener notas de un usuario

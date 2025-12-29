@@ -966,6 +966,29 @@
 /* Estilos para campos vacíos (obligatorios) - Removidos los indicadores visuales */
 
 /* Contenedor de factores y productos en filas */
+/* Overlay para bloquear interacción cuando aparece el Quipu del código */
+.overlay-bloqueo-quipu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9998; /* Por debajo del Quipu (10000) pero por encima de todo lo demás */
+  background: transparent;
+  pointer-events: auto; /* Bloquear todos los clicks */
+}
+
+/* Bloquear interacción en el contenedor cuando aparece el Quipu del código */
+.contenedor-filas.bloqueado-por-quipu {
+  pointer-events: none;
+  user-select: none;
+}
+
+.contenedor-filas.bloqueado-por-quipu * {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
 .contenedor-filas {
   display: flex;
   flex-direction: row;

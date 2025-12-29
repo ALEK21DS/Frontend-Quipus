@@ -139,11 +139,21 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
 
   // Funciones para el sistema de drag & drop
   const handleDragStart = (e, nudoNombre) => {
+    // Bloquear drag si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      e.preventDefault();
+      return;
+    }
     e.dataTransfer.setData('text/plain', nudoNombre);
     e.dataTransfer.effectAllowed = 'move';
   };
 
   const handleDragOver = (e) => {
+    // Bloquear drag over si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      e.preventDefault();
+      return;
+    }
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
     e.currentTarget.classList.add('drag-over');
@@ -174,6 +184,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
   const handleDrop = (e, factor, seccion) => {
     e.preventDefault();
     e.currentTarget.classList.remove('drag-over');
+    
+    // Bloquear drop si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      return;
+    }
     
     // Bloquear drop en factores izquierdos si están validados
     if (factoresIzquierdosValidados && (factor === 'factor1X' || factor === 'factor1Coef')) {
@@ -233,6 +248,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
 
   // Función para quitar un nudo (doble clic)
   const quitarNudo = (factor, seccion) => {
+    // Bloquear quitar nudos si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      return;
+    }
+    
     // Bloquear quitar nudos en factores izquierdos si están validados
     if (factoresIzquierdosValidados && (factor === 'factor1X' || factor === 'factor1Coef')) {
       return;
@@ -722,8 +742,9 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
   };
 
   const handleCoronaClickReto3 = () => {
-    // Asegurar que intentosAgotados esté en false para que el flujo funcione
+    // Asegurar que intentosAgotados y quipuPresionado estén en false para que el flujo funcione
     setIntentosAgotados(false);
+    setQuipuPresionado(false); // Resetear para que el quipu del código pueda ser presionado
     setCoronaDesaparecidaReto3(true);
     setCoronaPresionadaReto3(true);
     setMostrarCoronaReto3(false);
@@ -1367,6 +1388,11 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
       return;
     }
     
+    // Bloquear validación si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      return;
+    }
+    
     try {
       if (!valores.suma) {
         setValidacionTanteo({
@@ -1661,6 +1687,10 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
 
   // Función para validar la multiplicación de factores de la columna derecha
   const validarMultiplicacionFactoresDerechos = () => {
+    // Bloquear validación si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      return;
+    }
     // Si se acabaron los intentos, no permitir más validaciones
     if (intentosAgotados) {
       return;
@@ -1756,6 +1786,10 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
 
   // Función para validar la multiplicación de factores
   const validarMultiplicacionFactores = () => {
+    // Bloquear validación si el Quipu del código está visible
+    if (coronaDesaparecidaReto3) {
+      return;
+    }
     // Si se acabaron los intentos, no permitir más validaciones
     if (intentosAgotados) {
       return;
@@ -2034,7 +2068,10 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
           {ecuacionOriginal}
         </div>
       </div>
-      <div className="contenedor-filas">
+      {coronaDesaparecidaReto3 && (
+        <div className="overlay-bloqueo-quipu"></div>
+      )}
+      <div className={`contenedor-filas ${coronaDesaparecidaReto3 ? 'bloqueado-por-quipu' : ''}`}>
         {/* Contenedor principal */}
         <div className="main-container">
           {/* Términos de la ecuación */}
@@ -2222,7 +2259,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                 <button
                   className="btn-validar-factores"
                   onClick={validarMultiplicacionFactores}
-                  disabled={factoresIzquierdosValidados || intentosAgotados}
+                  disabled={factoresIzquierdosValidados || intentosAgotados || coronaDesaparecidaReto3}
                 >
                   ✓
                 </button>
@@ -2367,7 +2404,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                 <button
                   className="btn-validar-factores"
                   onClick={validarMultiplicacionFactoresDerechos}
-                  disabled={!factoresIzquierdosValidados || factoresDerechosValidados || intentosAgotados}
+                  disabled={!factoresIzquierdosValidados || factoresDerechosValidados || intentosAgotados || coronaDesaparecidaReto3}
                 >
                   ✓
                 </button>
@@ -2397,7 +2434,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                     setMostrarRespuesta(true);
                   }
                 }}
-                disabled={estadoValidacionTanteo !== 'correcto' || intentosAgotados}
+                disabled={estadoValidacionTanteo !== 'correcto' || intentosAgotados || coronaDesaparecidaReto3}
               >
                 RESULTADO
               </button>
@@ -2524,7 +2561,7 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                   <div 
                     key={idx} 
                     className="nudo-item"
-                    draggable={true}
+                    draggable={!coronaDesaparecidaReto3}
                     onDragStart={(e) => handleDragStart(e, nombre)}
                   >
                     {src ? (
@@ -2718,8 +2755,9 @@ const FactorizacionComponent = ({ datosUsuario, onCompletarReto3, sesionJuego, o
                         }
                       } else {
                         // Si más de 5 preguntas fueron correctas: victoria (mostrar corona)
-                        // Resetear intentosAgotados para que el flujo funcione correctamente
+                        // Resetear intentosAgotados y quipuPresionado para que el flujo funcione correctamente
                         setIntentosAgotados(false);
+                        setQuipuPresionado(false); // Resetear para que el quipu del código pueda ser presionado
                         setMostrarCoronaReto3(true);
                         setMostrarRespuesta(false);
                         setMostrarPrimerParentesis(false);

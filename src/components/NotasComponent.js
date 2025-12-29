@@ -9,19 +9,47 @@ const NotasComponent = ({ onVolver }) => {
   const [filtroCurso, setFiltroCurso] = useState('');
   const [filtroEdad, setFiltroEdad] = useState('');
 
+  // Estados de paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [registrosPorPagina] = useState(50); // 50 registros por página
+  const [totalRegistros, setTotalRegistros] = useState(0);
+  const [totalPaginas, setTotalPaginas] = useState(0);
+
   // Datos de notas desde la base de datos
   const [datosNotas, setDatosNotas] = useState([]);
-  const [cargando, setCargando] = useState(true);
+  const [cargando, setCargando] = useState(true); // Solo para la carga inicial
+  const [cargandoTabla, setCargandoTabla] = useState(false); // Para actualizaciones de filtros
   const [error, setError] = useState(null);
 
-  // Cargar notas desde la base de datos
+  // Cargar notas desde la base de datos con paginación y filtros
   useEffect(() => {
     const cargarNotas = async () => {
       try {
-        setCargando(true);
-        const response = await apiService.obtenerTodasNotas();
+        // Solo mostrar carga completa en la primera carga
+        if (datosNotas.length === 0) {
+          setCargando(true);
+        } else {
+          // Para actualizaciones, solo mostrar carga en la tabla
+          setCargandoTabla(true);
+        }
+        
+        const offset = (paginaActual - 1) * registrosPorPagina;
+        const response = await apiService.obtenerTodasNotas(
+          registrosPorPagina, 
+          offset, 
+          filtroCurso || null,
+          filtroNombre || null,
+          filtroApellido || null,
+          filtroEdad || null
+        );
         
         if (response.success && response.data) {
+          // Actualizar información de paginación
+          if (response.paginacion) {
+            setTotalRegistros(response.total || 0);
+            setTotalPaginas(response.paginacion.totalPaginas || 1);
+          }
+          
           // Transformar los datos para el formato esperado por el componente
           const notasTransformadas = response.data.map(nota => {
             // Calcular tiempo basado en tres estados posibles:
@@ -86,21 +114,15 @@ const NotasComponent = ({ onVolver }) => {
         setDatosNotas([]);
       } finally {
         setCargando(false);
+        setCargandoTabla(false);
       }
     };
 
     cargarNotas();
-  }, []);
+  }, [paginaActual, registrosPorPagina, filtroCurso, filtroNombre, filtroApellido, filtroEdad]);
 
-  // Función para filtrar los datos
-  const datosFiltrados = datosNotas.filter(estudiante => {
-    const nombreMatch = estudiante.nombre.toLowerCase().includes(filtroNombre.toLowerCase());
-    const apellidoMatch = estudiante.apellido.toLowerCase().includes(filtroApellido.toLowerCase());
-    const cursoMatch = estudiante.curso.toLowerCase().includes(filtroCurso.toLowerCase());
-    const edadMatch = filtroEdad === '' || estudiante.edad.toString().includes(filtroEdad);
-    
-    return nombreMatch && apellidoMatch && cursoMatch && edadMatch;
-  });
+  // Los datos ya vienen filtrados del servidor, no necesitamos filtrar en el cliente
+  const datosFiltrados = datosNotas;
 
   // Función para limpiar filtros
   const limpiarFiltros = () => {
@@ -108,7 +130,39 @@ const NotasComponent = ({ onVolver }) => {
     setFiltroApellido('');
     setFiltroCurso('');
     setFiltroEdad('');
+    setPaginaActual(1); // Resetear a la primera página
   };
+
+  // Resetear a la primera página cuando cambian los filtros
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [filtroNombre, filtroApellido, filtroCurso, filtroEdad]);
+
+  // Funciones de paginación
+  const irAPagina = (pagina) => {
+    if (pagina >= 1 && pagina <= totalPaginas) {
+      setPaginaActual(pagina);
+      // Scroll al inicio de la tabla
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
+  const paginaAnterior = () => {
+    if (paginaActual > 1) {
+      irAPagina(paginaActual - 1);
+    }
+  };
+
+  const paginaSiguiente = () => {
+    if (paginaActual < totalPaginas) {
+      irAPagina(paginaActual + 1);
+    }
+  };
+
+  // Calcular índices para mostrar (todos los filtros se aplican en el servidor)
+  const tieneFiltros = filtroNombre || filtroApellido || filtroCurso || filtroEdad;
+  const inicioRegistro = totalRegistros === 0 ? 0 : (paginaActual - 1) * registrosPorPagina + 1;
+  const finRegistro = Math.min(paginaActual * registrosPorPagina, totalRegistros);
 
   return (
     <div className="notas-page">
@@ -203,13 +257,28 @@ const NotasComponent = ({ onVolver }) => {
               🗑️ Limpiar Filtros
             </button>
             <span className="resultados-contador">
-              {datosFiltrados.length} de {datosNotas.length} estudiantes
+              {totalRegistros > 0 ? (
+                tieneFiltros 
+                  ? `Mostrando ${inicioRegistro}-${finRegistro} de ${totalRegistros} estudiantes (filtrados)`
+                  : `Mostrando ${inicioRegistro}-${finRegistro} de ${totalRegistros} estudiantes`
+              ) : (
+                tieneFiltros
+                  ? 'No hay estudiantes que coincidan con los filtros'
+                  : 'No hay estudiantes registrados'
+              )}
             </span>
           </div>
         </div>
         
         <div className="tabla-notas">
-          <table className="tabla-notas-table">
+          {cargandoTabla && (
+            <div className="tabla-cargando-overlay">
+              <div className="tabla-cargando-mensaje">
+                <p>⏳ Cargando...</p>
+              </div>
+            </div>
+          )}
+          <table className="tabla-notas-table" style={{ opacity: cargandoTabla ? 0.5 : 1 }}>
             <thead>
               <tr>
                 <th>Nombre</th>
@@ -243,6 +312,52 @@ const NotasComponent = ({ onVolver }) => {
             </tbody>
           </table>
         </div>
+
+        {/* Controles de paginación */}
+        {totalPaginas > 1 && (
+          <div className="paginacion-container">
+            <button
+              className="btn-paginacion"
+              onClick={paginaAnterior}
+              disabled={paginaActual === 1}
+            >
+              ← Anterior
+            </button>
+            
+            <div className="paginacion-numeros">
+              {Array.from({ length: Math.min(5, totalPaginas) }, (_, i) => {
+                let numeroPagina;
+                if (totalPaginas <= 5) {
+                  numeroPagina = i + 1;
+                } else if (paginaActual <= 3) {
+                  numeroPagina = i + 1;
+                } else if (paginaActual >= totalPaginas - 2) {
+                  numeroPagina = totalPaginas - 4 + i;
+                } else {
+                  numeroPagina = paginaActual - 2 + i;
+                }
+                
+                return (
+                  <button
+                    key={numeroPagina}
+                    className={`btn-pagina ${paginaActual === numeroPagina ? 'activa' : ''}`}
+                    onClick={() => irAPagina(numeroPagina)}
+                  >
+                    {numeroPagina}
+                  </button>
+                );
+              })}
+            </div>
+            
+            <button
+              className="btn-paginacion"
+              onClick={paginaSiguiente}
+              disabled={paginaActual === totalPaginas}
+            >
+              Siguiente →
+            </button>
+          </div>
+        )}
         </>
         )}
       </div>
