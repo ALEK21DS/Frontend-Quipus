@@ -140,6 +140,11 @@ class ApiService {
     return this.request(`/respuestas/sesion/${sesionId}`);
   }
 
+  // Obtener detalles completos de una sesión
+  async obtenerDetallesSesion(sesionId) {
+    return this.request(`/respuestas/sesion/${sesionId}/detalles`);
+  }
+
   // ==================== NOTAS ====================
   
   // Crear nueva nota

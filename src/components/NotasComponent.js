@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './NotasComponent.css';
 import apiService from '../services/api';
+import DetallesSesionComponent from './DetallesSesionComponent';
 
 const NotasComponent = ({ onVolver }) => {
   // Estados para búsqueda y filtrado
@@ -8,6 +9,9 @@ const NotasComponent = ({ onVolver }) => {
   const [filtroApellido, setFiltroApellido] = useState('');
   const [filtroCurso, setFiltroCurso] = useState('');
   const [filtroEdad, setFiltroEdad] = useState('');
+
+  // Estado para mostrar detalles de sesión
+  const [sesionSeleccionada, setSesionSeleccionada] = useState(null);
 
   // Estados de paginación
   const [paginaActual, setPaginaActual] = useState(1);
@@ -98,6 +102,7 @@ const NotasComponent = ({ onVolver }) => {
             
             return {
               id: nota.id,
+              sesionId: nota.sesionId, // Agregar sesionId para el botón de detalles
               nombre: nota.usuario.nombre,
               apellido: nota.usuario.apellido,
               curso: nota.usuario.curso || '-',
@@ -163,6 +168,23 @@ const NotasComponent = ({ onVolver }) => {
   const tieneFiltros = filtroNombre || filtroApellido || filtroCurso || filtroEdad;
   const inicioRegistro = totalRegistros === 0 ? 0 : (paginaActual - 1) * registrosPorPagina + 1;
   const finRegistro = Math.min(paginaActual * registrosPorPagina, totalRegistros);
+
+  // Función para ver detalles de una sesión
+  const verDetallesSesion = (sesionId) => {
+    if (sesionId) {
+      setSesionSeleccionada(sesionId);
+    }
+  };
+
+  // Función para volver a la lista de notas
+  const volverANotas = () => {
+    setSesionSeleccionada(null);
+  };
+
+  // Si hay una sesión seleccionada, mostrar el componente de detalles
+  if (sesionSeleccionada) {
+    return <DetallesSesionComponent sesionId={sesionSeleccionada} onVolver={volverANotas} />;
+  }
 
   return (
     <div className="notas-page">
@@ -287,6 +309,7 @@ const NotasComponent = ({ onVolver }) => {
                 <th>Edad</th>
                 <th>Nota</th>
                 <th>Tiempo</th>
+                <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
@@ -300,11 +323,24 @@ const NotasComponent = ({ onVolver }) => {
                     {estudiante.nota}
                   </td>
                   <td>{estudiante.tiempo}</td>
+                  <td>
+                    {estudiante.sesionId ? (
+                      <button 
+                        className="btn-ver-detalles"
+                        onClick={() => verDetallesSesion(estudiante.sesionId)}
+                        title="Ver detalles de la sesión"
+                      >
+                        Ver Detalles
+                      </button>
+                    ) : (
+                      <span className="sin-sesion">-</span>
+                    )}
+                  </td>
                 </tr>
               ))}
               {datosFiltrados.length === 0 && (
                 <tr>
-                  <td colSpan="6" className="sin-resultados">
+                  <td colSpan="7" className="sin-resultados">
                     No se encontraron estudiantes con los filtros aplicados
                   </td>
                 </tr>

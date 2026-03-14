@@ -1,0 +1,743 @@
+/* Estilos para DetallesSesionComponent */
+.detalles-page {
+  background-image: url('../assets/img/fondoTabla.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.detalles-container {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 1200px;
+  width: 100%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.detalles-titulo {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 2.5rem;
+  color: #FFD700;
+  text-align: center;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Información General */
+.info-general {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.info-general h2 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  color: #FFD700;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-label {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.info-valor {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  color: #FFFFFF;
+}
+
+.info-valor.completado {
+  color: #90EE90;
+}
+
+.info-valor.incompleto {
+  color: #FF6B6B;
+}
+
+/* Resumen de Nota */
+.resumen-nota {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.resumen-nota h2 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  color: #FFD700;
+  margin-bottom: 15px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.nota-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.nota-label {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.3rem;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.nota-valor {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.nota-valor.excelente {
+  color: #90EE90;
+}
+
+.nota-valor.buena {
+  color: #87CEEB;
+}
+
+.nota-valor.regular {
+  color: #FFD700;
+}
+
+.nota-valor.baja {
+  color: #FF6B6B;
+}
+
+.nota-desglose {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.nota-reto {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  color: #FFFFFF;
+}
+
+/* Secciones de Retos */
+.reto-seccion {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.reto-seccion h2 {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.5rem;
+  color: #FFD700;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.reto-descripcion {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  color: #FFFFFF;
+  margin-bottom: 20px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+/* Preguntas del Reto 1 y 2 */
+.preguntas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pregunta-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid;
+}
+
+.pregunta-item.correcta {
+  border-left-color: #90EE90;
+}
+
+.pregunta-item.incorrecta {
+  border-left-color: #FF6B6B;
+}
+
+.pregunta-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.pregunta-numero {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.pregunta-estado {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.pregunta-estado.correcto {
+  background: rgba(144, 238, 144, 0.2);
+  color: #90EE90;
+}
+
+.pregunta-estado.incorrecto {
+  background: rgba(255, 107, 107, 0.2);
+  color: #FF6B6B;
+}
+
+.pregunta-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pregunta-texto {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.respuesta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+}
+
+.respuesta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.respuesta-label {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  color: #FFD700;
+}
+
+.respuesta-valor {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.respuesta-valor.correcta-valor {
+  color: #90EE90;
+}
+
+.respuesta-valor.incorrecta-valor {
+  color: #FF6B6B;
+}
+
+.contribucion-nota {
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 5px;
+  text-align: center;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-weight: 600;
+}
+
+.contribucion-positiva {
+  color: #90EE90;
+}
+
+.contribucion-parcial {
+  color: #FFD700;
+}
+
+.contribucion-negativa {
+  color: #FF6B6B;
+}
+
+/* Ejercicios del Reto 3 */
+.ejercicios-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.ejercicio-item {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid;
+}
+
+.ejercicio-item.completado {
+  border-left-color: #90EE90;
+}
+
+.ejercicio-item.incompleto {
+  border-left-color: #FF6B6B;
+}
+
+.ejercicio-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.ejercicio-numero {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.ejercicio-estado {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.ejercicio-estado.completado-estado {
+  background: rgba(144, 238, 144, 0.2);
+  color: #90EE90;
+}
+
+.ejercicio-estado.incompleto-estado {
+  background: rgba(255, 107, 107, 0.2);
+  color: #FF6B6B;
+}
+
+.ejercicio-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.ecuacion-original {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+  color: #FFD700;
+  text-align: center;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  margin: 0;
+  font-weight: 600;
+}
+
+.validaciones-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.validacion-item {
+  padding: 10px;
+  border-radius: 8px;
+  border: 2px solid;
+}
+
+.validacion-item.validacion-correcta {
+  background: rgba(144, 238, 144, 0.1);
+  border-color: #90EE90;
+}
+
+.validacion-item.validacion-incorrecta {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: #FF6B6B;
+}
+
+.validacion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.validacion-nombre {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.95rem;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+.validacion-icono {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.validacion-correcta .validacion-icono {
+  color: #90EE90;
+}
+
+.validacion-incorrecta .validacion-icono {
+  color: #FF6B6B;
+}
+
+.validacion-detalles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  color: #FFFFFF;
+}
+
+.validacion-errores {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.85rem;
+  color: #FFA500;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.validacion-errores-visual {
+  font-size: 0.75rem;
+  color: #FF6B6B;
+  font-weight: 600;
+  letter-spacing: 2px;
+}
+
+/* Aclaración de nota */
+.nota-aclaracion {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.85rem;
+  color: #FFD700;
+  text-align: center;
+  margin-top: 10px;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Botón Volver Fijo en esquina superior izquierda */
+.btn-volver-fixed {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  color: #FFFFFF;
+  border: 2px solid #654321;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.btn-volver-fixed:hover {
+  background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.btn-volver-fixed:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Botón Volver al final */
+.btn-volver-bottom {
+  background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+  color: #FFFFFF;
+  border: 2px solid #654321;
+  border-radius: 10px;
+  padding: 12px 24px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  margin-top: 20px;
+  width: 100%;
+}
+
+.btn-volver-bottom:hover {
+  background: linear-gradient(135deg, #A0522D 0%, #CD853F 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+}
+
+.btn-volver-bottom:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Casillas del Reto 2 */
+.casillas-reto2 {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 15px 0;
+}
+
+.casilla-item {
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid;
+}
+
+.casilla-item.casilla-correcta {
+  background: rgba(144, 238, 144, 0.1);
+  border-color: #90EE90;
+}
+
+.casilla-item.casilla-incorrecta {
+  background: rgba(255, 107, 107, 0.1);
+  border-color: #FF6B6B;
+}
+
+.casilla-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.casilla-numero {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 0.9rem;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.casilla-icono {
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.casilla-correcta .casilla-icono {
+  color: #90EE90;
+}
+
+.casilla-incorrecta .casilla-icono {
+  color: #FF6B6B;
+}
+
+.casilla-detalles {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.casilla-respuesta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.casilla-label {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  color: #FFD700;
+  font-weight: 600;
+}
+
+.casilla-valor {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Ejercicios no respondidos del Reto 3 */
+.ejercicio-item.no-respondido {
+  border-left-color: #FFA500;
+  background: rgba(255, 165, 0, 0.1);
+}
+
+.ejercicio-estado.no-respondido-estado {
+  background: rgba(255, 165, 0, 0.2);
+  color: #FFA500;
+}
+
+.mensaje-no-respondido {
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1rem;
+  color: #FFA500;
+  text-align: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Botón Volver */
+.btn-volver {
+  display: none; /* Ocultar el botón original */
+}
+
+/* Mensajes de estado */
+.mensaje-estado,
+.mensaje-error {
+  text-align: center;
+  padding: 40px;
+  font-family: 'Cinzel', 'Times New Roman', serif;
+  font-size: 1.2rem;
+}
+
+.mensaje-estado {
+  color: #FFD700;
+}
+
+.mensaje-error {
+  color: #FF6B6B;
+}
+
+/* Scrollbar personalizado */
+.detalles-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+.detalles-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.detalles-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 215, 0, 0.5);
+  border-radius: 10px;
+}
+
+.detalles-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 215, 0, 0.7);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .detalles-container {
+    padding: 20px;
+  }
+
+  .detalles-titulo {
+    font-size: 1.8rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nota-desglose {
+    grid-template-columns: 1fr;
+  }
+
+  .nota-valor {
+    font-size: 1.5rem;
+  }
+}
+
+/* Estilos para intentos en validaciones del Reto 3 */
+.validacion-intentos {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.validacion-intentos.intento-excelente {
+  color: #90EE90;
+}
+
+.validacion-intentos.intento-bueno {
+  color: #FFD700;
+}
+
+.validacion-intentos.intento-regular {
+  color: #FFA500;
+}
+
+.penalizacion-texto {
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #FFA500;
+  margin-left: 5px;
+}
+
+/* Nota de penalización */
+.nota-penalizacion {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #FFD700;
+  font-style: italic;
+  padding: 8px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 5px;
+  border-left: 3px solid #FFD700;
+}
+
+.nota-penalizacion-detalle {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: #FFA500;
+  padding: 10px;
+  background: rgba(255, 165, 0, 0.15);
+  border-radius: 5px;
+  border-left: 3px solid #FFA500;
+  line-height: 1.6;
+}
+
+.nota-perfecta {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #90EE90;
+  font-weight: 600;
+  padding: 8px;
+  background: rgba(144, 238, 144, 0.1);
+  border-radius: 5px;
+  border-left: 3px solid #90EE90;
+}
